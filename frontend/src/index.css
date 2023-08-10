@@ -43,3 +43,35 @@ code {
 a img {
   @apply border-2 border-transparent transition-all duration-300 hover:scale-105 hover:shadow-md;
 }
+
+/* Define headings */
+.heading--1 {
+  @apply text-4xl lg:text-5xl font-semibold;
+}
+
+.heading--2 {
+  @apply text-3xl lg:text-4xl font-semibold;
+}
+
+.heading--3 {
+  @apply text-2xl lg:text-3xl font-normal;
+}
+
+.heading--4 {
+  @apply text-xl lg:text-2xl font-normal;
+}
+
+.heading--5 {
+  @apply text-lg lg:text-xl font-normal;
+}
+
+.heading--6 {
+  @apply text-base lg:text-lg font-normal;
+}
+
+.--small-text {
+  @apply text-sm lg:text-base font-light;
+}
+
+/* End define headings */
+/* ******************* */
