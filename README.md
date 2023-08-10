@@ -1,1 +1,1 @@
-# TASER (Talk Analysis & Knowledge Extraction Resource)
+# TASER (Talk Analysis & Sound Extraction Resource)
