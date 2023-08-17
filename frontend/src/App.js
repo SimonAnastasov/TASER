@@ -1,20 +1,21 @@
-import Homepage from "./components/homepage/Homepage";
 import Background from "./components/shared/Background";
 import Header from "./components/shared/Header";
+import PageContent from "./components/shared/PageContent";
 
 function App() {
-  return (
-    <div>
+    return (
+        <div>
 
-      <Background/>
+            <Background/>
 
-      <Header/>
+            <Header/>
 
-      <div className="w-full h-40 lg:h-48"></div>
-      <Homepage/>
+            <div className="w-full h-40 lg:h-48"></div>
 
-    </div>
-  );
+            <PageContent/>
+
+        </div>
+    );
 }
 
 export default App;
