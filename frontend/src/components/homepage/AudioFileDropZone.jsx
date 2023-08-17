@@ -1,4 +1,6 @@
 import React, { useEffect }  from 'react'
+import { useDispatch } from 'react-redux';
+
 import InfoButton from '../utils/InfoButton';
 import { INFO_CONTINUE_TO_ANALYSE_AUDIO } from '../../utils/infoTexts';
 import { setPageContent } from '../../redux/reducers/pageContentSlice';
@@ -23,10 +25,14 @@ const AudioFileDropZone = () => {
     
     // Handle file upload
     useEffect(() => {
-        document.getElementById('audioFileUpload').addEventListener('change', (e) => audioFileUploadChange(e));
+        if (document.getElementById("audioFileUpload")) {
+            document.getElementById('audioFileUpload').addEventListener('change', (e) => audioFileUploadChange(e));
+        }
     
         return () => {
-          document.getElementById('audioFileUpload').removeEventListener('change', (e) => audioFileUploadChange(e));
+            if (document.getElementById("audioFileUpload")) {
+                document.getElementById('audioFileUpload').removeEventListener('change', (e) => audioFileUploadChange(e));
+            }
         }
     
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -35,14 +41,18 @@ const AudioFileDropZone = () => {
 
     // Handle drag & drop
     useEffect(() => {
-        document.getElementById("audioFileDropZone").addEventListener('dragenter', (e) => dragEnter(e));
-        document.getElementById("audioFileDropZone").addEventListener('dragleave', (e) => dragLeave(e));
-        document.getElementById("audioFileDropZone").addEventListener('drop', (e) => drop(e));
+        if (document.getElementById("audioFileDropZone")) {
+            document.getElementById("audioFileDropZone").addEventListener('dragenter', (e) => dragEnter(e));
+            document.getElementById("audioFileDropZone").addEventListener('dragleave', (e) => dragLeave(e));
+            document.getElementById("audioFileDropZone").addEventListener('drop', (e) => drop(e));
+        }
     
         return () => {
-            document.getElementById("audioFileDropZone").removeEventListener('dragenter', (e) => dragEnter(e));
-            document.getElementById("audioFileDropZone").removeEventListener('dragleave', (e) => dragLeave(e));
-            document.getElementById("audioFileDropZone").removeEventListener('drop', (e) => drop(e));
+            if (document.getElementById("audioFileDropZone")) {
+                document.getElementById("audioFileDropZone").removeEventListener('dragenter', (e) => dragEnter(e));
+                document.getElementById("audioFileDropZone").removeEventListener('dragleave', (e) => dragLeave(e));
+                document.getElementById("audioFileDropZone").removeEventListener('drop', (e) => drop(e));
+            }
         }
     
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -102,6 +112,7 @@ const AudioFileDropZone = () => {
         dispatch(setPageContent(1));
     }
 
+    // Handle user wanting to remove uploaded audio file
     function deleteUploadedAudioFile(e) {
         e.stopPropagation();
     
