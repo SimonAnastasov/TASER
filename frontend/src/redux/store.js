@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
-import globalReducer from './reducers/globalSlice'
+import infoButtonReducer from './reducers/infoButtonSlice'
 
 export default configureStore({
   reducer: {
-    global: globalReducer,
+    infoButton: infoButtonReducer,
   },
 })

@@ -1,4 +1,4 @@
-import Homepage from "./components/homepage/Main";
+import Homepage from "./components/homepage/Homepage";
 import Background from "./components/shared/Background";
 import Header from "./components/shared/Header";
 
