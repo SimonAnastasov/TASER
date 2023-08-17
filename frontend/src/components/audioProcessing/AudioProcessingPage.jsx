@@ -17,25 +17,25 @@ const AudioProcessingPage = () => {
     const [serverStatus, setServerStatus] = useState(0);
 
     useEffect(() => {
-        // change serverStatus to 1 after 1 second
+        // change serverStatus to 1 after 500 milliseconds
         setTimeout(() => {
             setServerStatus(1);
 
             // TODO: replace this with real audio processing id
             // it will help to restore the audio processing page if user refreshes the page
             localStorage.setItem('audioProcessingId', 12304);
-        }, 1000);
+        }, 500);
 
-        // change serverStatus to 2 after 3 seconds
+        // change serverStatus to 2 after 1 second
         setTimeout(() => {
             setServerStatus(2);
 
-            // Save result in reducer
+            // Save result in redux store
             dispatch(setAnalysisResult(TEST_ANALYSIS_RESULT_RESPONSE))
 
             // Set page content to results page
             dispatch(setPageContent(2));
-        }, 3000);
+        }, 500);
     }, []);
 
     return (

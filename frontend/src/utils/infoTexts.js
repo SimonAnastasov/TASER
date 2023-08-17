@@ -8,7 +8,8 @@ export const INFO_FREE_VERSION = `
 
 export const INFO_CONTINUE_TO_ANALYSE_AUDIO = `
     Continue by pressing the <br/>
-    'Analyse Audio →' button below
+    'Analyse Audio →' button below <br/>
+    (Scroll down if it's not visible)
 `
 
 export const INFO_DO_NOT_REFRESH_PAGE = `
