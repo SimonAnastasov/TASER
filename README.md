@@ -10,11 +10,10 @@
 <br/>
 
 - Backend:
-    - [ ] 
+    - [ ] --
 
 <br/>
 
 - Frontend:
-    - [ ] Drag & Drop Audio file
-    - [ ] Error message on uploading Audio file (onerror)
+    - [ ] --
 
