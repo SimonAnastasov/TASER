@@ -37,6 +37,14 @@ code {
   @apply bg-primary text-dark hover:bg-dark hover:text-primary border-2 border-dark hover:border-primary;
 }
 
+.button--success {
+  @apply bg-transparent text-green-700 hover:bg-green-700 hover:text-white border-2 border-green-700 hover:border-transparent;
+}
+
+.button--success-inverted {
+  @apply bg-green-700 text-white hover:bg-transparent hover:text-green-700 border-2 border-transparent hover:border-green-700;
+}
+
 /* End define buttons */
 /* ****************** */
 

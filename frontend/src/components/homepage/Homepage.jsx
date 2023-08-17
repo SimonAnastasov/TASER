@@ -15,6 +15,8 @@ const Homepage = () => {
             </div>
 
             <AudioFileDropZone/>
+
+            <div className="py-20"></div>
         </div>
     )
 }

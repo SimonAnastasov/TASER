@@ -1,4 +1,6 @@
 import React, { useEffect }  from 'react'
+import InfoButton from '../utils/InfoButton';
+import { INFO_CONTINUE_TO_ANALYSE_AUDIO } from '../../utils/infoTexts';
 
 const AudioFileDropZone = () => {
     const [audioFileMetadata, setAudioFileMetadata] = React.useState({
@@ -61,6 +63,10 @@ const AudioFileDropZone = () => {
                             </div>
                             <img src="/images/icon-sound.png" className="w-12" alt="icon sound"/>
                             <p className="heading--5 text-center">{audioFileMetadata.name}</p>
+
+                            <div className="mt-4">
+                                <InfoButton infoText={INFO_CONTINUE_TO_ANALYSE_AUDIO}/>
+                            </div>
                         </>
                         ) : audioFileMetadata.readyState === 3 ? (
                         <>
@@ -71,6 +77,12 @@ const AudioFileDropZone = () => {
                     }
                     </div>
                 </div>
+
+                {audioFileMetadata.readyState === 2 && (
+                    <div className={`mt-8 flex justify-center`}>
+                        <button type="button" className="--button button--success">Analyse Audio →</button>
+                    </div>
+                )}
             </div>
         </div>
     )
