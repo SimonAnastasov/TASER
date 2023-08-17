@@ -35,15 +35,15 @@ const AudioProcessingPage = () => {
 
             // Set page content to results page
             dispatch(setPageContent(2));
-        }, 500);
+        }, 1000);
     }, []);
 
     return (
-        <div className="px-2 lg:px-0">
+        <div className="px-6 lg:px-0">
             <div className="flex justify-center mb-6">
                 {
                     serverStatus !== 3 ? (
-                        <img src="/images/icon-spinner.png" className="w-12 animate-spin" alt="icon sound"/>
+                        <img src="/images/icon-spinner.png" className="w-12 animate-spin" alt="icon spinner"/>
                     ) : (
                         <p className="opacity-60 text-5xl">❌</p>
                     )

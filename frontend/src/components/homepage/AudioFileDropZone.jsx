@@ -73,7 +73,7 @@ const AudioFileDropZone = () => {
                         </>
                         ) : audioFileMetadata.readyState === 1 ? (
                         <>
-                            <img src="/images/icon-spinner.png" className="w-12 animate-spin" alt="icon sound"/>
+                            <img src="/images/icon-spinner.png" className="w-12 animate-spin" alt="icon spinner"/>
                         </>
                         ) : audioFileMetadata.readyState === 2 ? (
                         <>

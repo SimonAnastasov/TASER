@@ -17,3 +17,7 @@ export const INFO_DO_NOT_REFRESH_PAGE = `
     to the server will result in an incomplete file on the server,
     and you will be redirected to the homepage to start the process over again.
 `
+
+export const INFO_BOXES_ARE_SCROLLABLE = `
+    All of the information boxes are scrollable if the output is large.
+`
