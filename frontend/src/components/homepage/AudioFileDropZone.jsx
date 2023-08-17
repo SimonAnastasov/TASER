@@ -1,4 +1,4 @@
-import React, { useEffect }  from 'react'
+import React, { useEffect, useState }  from 'react'
 import { useDispatch } from 'react-redux';
 
 import InfoButton from '../utils/InfoButton';
@@ -12,7 +12,7 @@ const AudioFileDropZone = () => {
     //             1 - loader while uploading file;
     //             2 - file uploaded;
     //             3 - error;
-    const [audioFileMetadata, setAudioFileMetadata] = React.useState({
+    const [audioFileMetadata, setAudioFileMetadata] = useState({
         name: '',
         readyState: 0,
         styles: {

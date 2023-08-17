@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setInfoText } from '../../redux/reducers/infoButtonSlice';
 
 const InfoButton = ({ infoText }) => {
-    const [infoBoxIsActive, setInfoBoxIsActive] = React.useState(false);
+    const [infoBoxIsActive, setInfoBoxIsActive] = useState(false);
 
     const currentInfoText = useSelector(state => state.infoButton.text)
     const dispatch = useDispatch();

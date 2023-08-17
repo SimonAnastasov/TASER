@@ -10,3 +10,9 @@ export const INFO_CONTINUE_TO_ANALYSE_AUDIO = `
     Continue by pressing the <br/>
     'Analyse Audio →' button below
 `
+
+export const INFO_DO_NOT_REFRESH_PAGE = `
+    Refreshing the page while the audio hasn't finished uploading
+    to the server will result in an incomplete file on the server,
+    and you will be redirected to the homepage to start the process over again.
+`

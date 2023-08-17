@@ -1,4 +1,4 @@
-export const TEST_RESPONSE = {
+export const TEST_ANALYSIS_RESULT_RESPONSE = {
     'segments': [{'id': 0,
     'start': 0.7003125,
     'end': 63.627187500000005,
