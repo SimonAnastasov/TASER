@@ -1,8 +1,15 @@
 import React, { useEffect }  from 'react'
 import InfoButton from '../utils/InfoButton';
 import { INFO_CONTINUE_TO_ANALYSE_AUDIO } from '../../utils/infoTexts';
+import { setPageContent } from '../../redux/reducers/pageContentSlice';
 
 const AudioFileDropZone = () => {
+    const dispatch = useDispatch();
+
+    // readyState: 0 - no file selected;
+    //             1 - loader while uploading file;
+    //             2 - file uploaded;
+    //             3 - error;
     const [audioFileMetadata, setAudioFileMetadata] = React.useState({
         name: '',
         readyState: 0,
@@ -14,6 +21,7 @@ const AudioFileDropZone = () => {
         }
     });
     
+    // Handle file upload
     useEffect(() => {
         document.getElementById('audioFileUpload').addEventListener('change', (e) => audioFileUploadChange(e));
     
@@ -24,6 +32,8 @@ const AudioFileDropZone = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     
+
+    // Handle drag & drop
     useEffect(() => {
         document.getElementById("audioFileDropZone").addEventListener('dragenter', (e) => dragEnter(e));
         document.getElementById("audioFileDropZone").addEventListener('dragleave', (e) => dragLeave(e));
@@ -80,12 +90,17 @@ const AudioFileDropZone = () => {
 
                 {audioFileMetadata.readyState === 2 && (
                     <div className={`mt-8 flex justify-center`}>
-                        <button type="button" className="--button button--success">Analyse Audio →</button>
+                        <button type="button" className="--button button--success" onClick={sendAudioForProcessing}>Analyse Audio →</button>
                     </div>
                 )}
             </div>
         </div>
     )
+
+    function sendAudioForProcessing(e) {
+        // Set page content to audio processing page
+        dispatch(setPageContent(1));
+    }
 
     function deleteUploadedAudioFile(e) {
         e.stopPropagation();
@@ -105,15 +120,21 @@ const AudioFileDropZone = () => {
         })
     }
     
+    // Add handler functions for uploading audio file;
+    // onloadstart, onload, onerror
+    // 
+    // Also handle if selected file is not audio file
     function audioFileUploadChange(e) {
         let audioFile = e.target.files[0]
     
+        // Handle if audio file is missing or selected file is not audio file
         if (audioFile && audioFile.type.startsWith('audio/')) {
           const reader = new FileReader();
     
           try {
             reader.readAsDataURL(audioFile);
     
+            // See readyState meaning at the beginning of this file
             reader.onloadstart = function(e) {
                 setAudioFileMetadata({
                     ...audioFileMetadata,
@@ -127,6 +148,7 @@ const AudioFileDropZone = () => {
               })
             }
     
+            // See readyState meaning at the beginning of this file
             reader.onload = function(e) {
                 setAudioFileMetadata({
                     ...audioFileMetadata,
@@ -141,6 +163,7 @@ const AudioFileDropZone = () => {
                 })
             }
     
+            // See readyState meaning at the beginning of this file
             reader.onerror = function(e) {
                 setAudioFileMetadata({
                     ...audioFileMetadata,
@@ -157,6 +180,7 @@ const AudioFileDropZone = () => {
             return ;
           }
         } else {
+            // File is not audio file or something went wrong when selecting a file.
             document.getElementById('audioFileUpload').value = "";
         
             setAudioFileMetadata({
@@ -171,6 +195,7 @@ const AudioFileDropZone = () => {
         }
     }
     
+    // Dashed border when dragging file over drop zone
     function dragEnter(e) {
         e.preventDefault();
     
@@ -195,6 +220,8 @@ const AudioFileDropZone = () => {
         })
     }
     
+    // Reset input value for file upload when dropping a new file to upload.
+    // Then, the input field will get the new file.
     function drop(e) {
         document.getElementById('audioFileUpload').value = "";
     }
