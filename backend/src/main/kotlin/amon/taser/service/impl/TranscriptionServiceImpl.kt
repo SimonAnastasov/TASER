@@ -1,0 +1,23 @@
+package amon.taser.service.impl
+
+import amon.taser.repository.TranscriptionRepository
+import amon.taser.service.AudioTranscriptionApi
+import amon.taser.service.TranscriptionService
+import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
+import java.util.*
+
+@Service
+class TranscriptionServiceImpl(
+        val audioTranscriptionApi: AudioTranscriptionApi,
+        val transcriptionRepository: TranscriptionRepository
+): TranscriptionService {
+    override fun startTranscription(file: MultipartFile): UUID? {
+        return audioTranscriptionApi.startTranscription(file)
+    }
+
+    override fun checkTranscriptionStatus(id: UUID): Boolean {
+        return transcriptionRepository.findById(id).get().isCompleted
+    }
+
+}
