@@ -12,7 +12,7 @@ import java.util.*
 @Service
 class UserServiceImpl(
         val userRepository: UserRepository
-): UserService, UserDetailsService {
+): UserService {
     override fun createUser(username: String, password: String): User? {
         return userRepository.save(User(username, password, username))
     }

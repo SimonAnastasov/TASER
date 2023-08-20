@@ -1,9 +1,10 @@
 package amon.taser.service
 
 import amon.taser.model.User
+import org.springframework.security.core.userdetails.UserDetailsService
 import java.util.UUID
 
-interface UserService {
+interface UserService : UserDetailsService{
     fun createUser(username: String, password: String): User?
     fun getUser(username: UUID): User?
 }
