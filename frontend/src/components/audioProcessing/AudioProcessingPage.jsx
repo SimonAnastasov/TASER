@@ -36,6 +36,8 @@ const AudioProcessingPage = () => {
             // Set page content to results page
             dispatch(setPageContent(2));
         }, 1000);
+        
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

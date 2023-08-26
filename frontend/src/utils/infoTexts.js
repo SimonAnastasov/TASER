@@ -18,6 +18,12 @@ export const INFO_DO_NOT_REFRESH_PAGE = `
     and you will be redirected to the homepage to start the process over again.
 `
 
-export const INFO_BOXES_ARE_SCROLLABLE = `
-    All of the information boxes are scrollable if the output is large.
+export const INFO_RESULTS_PAGE = `
+    You can toggle which analysis to be shown <br/>
+    (Global Analysis / Segment By Segment Analysis) <br/>
+    by pressing the switch above.<br/><br/>
+
+    <hr/> <br/>
+
+    All of the information boxes below are scrollable when the output is large.
 `
