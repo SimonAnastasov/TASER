@@ -19,5 +19,8 @@ class TranscriptionServiceImpl(
     override fun checkTranscriptionStatus(id: UUID): Boolean {
         return transcriptionRepository.findById(id).get().isCompleted
     }
+    override fun getTranscriptionResult(id: UUID): String? {
+        return transcriptionRepository.findById(id).get().text
+    }
 
 }

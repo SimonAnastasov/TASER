@@ -6,4 +6,5 @@ import java.util.UUID
 interface TranscriptionService {
     fun startTranscription(file: MultipartFile) : UUID?
     fun checkTranscriptionStatus(id: UUID) : Boolean
+    fun getTranscriptionResult(id: UUID): String?
 }

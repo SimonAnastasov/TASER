@@ -31,7 +31,7 @@ class JWTWebSecurityConfig(
     public fun configure(http: HttpSecurity, authManager: AuthenticationManager): SecurityFilterChain {
         http.cors().and().csrf().disable()
             .authorizeRequests()
-            .requestMatchers("/login","/api/login","/upload").permitAll()
+            .requestMatchers("/login","/api/**").permitAll()
             .anyRequest()
             .authenticated()
             .and()
