@@ -5,7 +5,7 @@ const Header = () => {
     <header className="absolute inset-0 bottom-auto bg-primary text-white py-4 px-4 lg:px-16 flex justify-between items-center">
         <div>
           <a href="./">
-            <img src="/images/logo.png" alt="TASER LOGO" className="object-contain w-20 h-20 rounded-full hover:border-white"/>
+            <img src="/images/logo.png" alt="TASER LOGO" className="object-contain w-16 h-16 lg:w-20 lg:h-20 rounded-full hover:border-white"/>
           </a>
         </div>
         <div className="flex gap-4">

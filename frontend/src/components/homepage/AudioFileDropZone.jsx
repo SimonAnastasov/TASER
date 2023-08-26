@@ -1,12 +1,11 @@
 import React, { useEffect, useState }  from 'react'
-import { useDispatch } from 'react-redux';
 
 import InfoButton from '../utils/InfoButton';
 import { INFO_CONTINUE_TO_ANALYSE_AUDIO } from '../../utils/infoTexts';
-import { setPageContent } from '../../redux/reducers/pageContentSlice';
+import { useNavigate } from 'react-router-dom';
 
 const AudioFileDropZone = () => {
-    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     // readyState: 0 - no file selected;
     //             1 - loader while uploading file;
@@ -108,8 +107,8 @@ const AudioFileDropZone = () => {
     )
 
     function sendAudioForProcessing(e) {
-        // Set page content to audio processing page
-        dispatch(setPageContent(1));
+        // Redirect to audio processing page
+        navigate("/processing");
     }
 
     // Handle user wanting to remove uploaded audio file

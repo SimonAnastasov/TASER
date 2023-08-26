@@ -18,7 +18,7 @@ code {
 
 /* Define buttons */
 .--button {
-  @apply block py-3 px-8 rounded-full transition-all duration-300 shadow-md text-base font-semibold;
+  @apply block py-2 lg:py-3 px-5 lg:px-8 rounded-full transition-all duration-300 shadow-md text-sm lg:text-base font-semibold;
 }
 
 .button--primary {
