@@ -1,4 +1,10 @@
 export const INFO_FREE_VERSION = `
+    TASER (Talk Analysis & Sound Extraction Resource) works best with audios that mostly consist of people talking. <br/><br/>
+
+    TASER analysis the audio and returns various extracted information in a text format. <br/><br/>
+
+    <hr/><br/>
+
     TASER-F is a free version of the app. <br/><br/>
     
     It only serves as a prototype so that you can get a feel for how it works,

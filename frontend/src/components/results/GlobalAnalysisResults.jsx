@@ -12,8 +12,8 @@ const GlobalAnalysisResults = () => {
         {title: "Abstractive Summarization", content: analysisResult?.Global_abstractive_summarization}
     ]
 
-
-    if (!analysisResult) return <></>;
+    
+    if (!analysisResult || Object.keys(analysisResult).length === 0) return <></>;
 
     return (
         <>
