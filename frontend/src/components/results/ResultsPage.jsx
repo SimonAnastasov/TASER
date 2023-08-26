@@ -16,7 +16,7 @@ const ResultsPage = () => {
         <div className="px-6 lg:px-0">
             {analysisResult ? (
                 <>
-                    <div className="mb-16 w-fit mx-auto text-sm lg:text-lg">
+                    <div className="mb-8 lg:mb-16 w-fit mx-auto text-sm lg:text-lg">
                         <ToggleShownAnalysis/>
                     </div>
 

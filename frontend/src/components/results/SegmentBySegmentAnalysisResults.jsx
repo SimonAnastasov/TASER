@@ -19,7 +19,7 @@ const SegmentBySegmentAnalysisResults = () => {
             {analysisResult.segments.map((segment, index) => (
                 <div key={`segment${index}`} className={`${index === shownSegmentNumber ? '' : 'hidden'}`}>
                     {/* Switch between segments with back and forward arrows */}
-                    <div className="lg:px-6 w-fit mx-auto mt-16 flex justify-center items-center gap-4 lg:gap-12">
+                    <div className="mt-12 lg:mt-16 lg:px-6 w-fit mx-auto flex justify-center items-center gap-4 lg:gap-12">
                         <div className="text-2xl w-fit py-2 px-4 rounded shadow-md bg-white text-black cursor-pointer hover:bg-black hover:text-white transition-all duration-300"
                              onClick={() => setShownSegmentNumber( (totalSegments + shownSegmentNumber - 1) % totalSegments )}
                         >
@@ -37,7 +37,7 @@ const SegmentBySegmentAnalysisResults = () => {
 
                     {/* Show speaker */}
                     <div className="mt-8 flex gap-2 justify-center items-center">
-                        <span className="heading--6">Speaker: <span className="font-bold">{segment.speaker}</span></span>
+                        <span className="heading--6 text-center">Speaker: <span className="font-bold">{segment.speaker}</span></span>
                     </div>
 
                     {/* Show time frame of speaking */}
@@ -48,13 +48,13 @@ const SegmentBySegmentAnalysisResults = () => {
                                 <div className="heading--3">🎬</div>
                                 <div className="heading--6">{segment.start.toFixed(2)}s</div>
                             </div>
-                            <div className="h-0.5 w-32 bg-black -translate-y-3"></div>
+                            <div className="h-0.5 w-8 lg:w-32 bg-black -translate-y-3"></div>
                             <div className="flex flex-col items-center gap-1">
                                 <InfoButton infoText={"The total duration for which the speaker in this segment was speaking."} small/>
                                 <div className="heading--3">⏳</div>
                                 <div className="heading--6">{(segment.end - segment.start).toFixed(2)}s</div>
                             </div>
-                            <div className="h-0.5 w-32 bg-black -translate-y-3"></div>
+                            <div className="h-0.5 w-8 lg:w-32 bg-black -translate-y-3"></div>
                             <div className="flex flex-col items-center gap-1">
                                 <InfoButton infoText={"The timestamp in the audio when the speaker in this segment finished speaking."} small/>
                                 <div className="heading--3">🏁</div>

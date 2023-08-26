@@ -15,7 +15,9 @@ const InfoBoxes = ({ entities_list, global_texts }) => {
                     {/* A single entity_type holds many entities  */}
                     {/* Global_entities_list is 'key (entity_type) - value (list of entity objects)' object */}
                     {/* A single entity is 'key - value' object */}
-                    {Object.entries(entities_list).map(([entity_type, entities]) => (
+                    {Object.entries(entities_list)
+                            .sort(([entityTypeA], [entityTypeB]) => entityTypeA.localeCompare(entityTypeB))
+                            .map(([entity_type, entities]) => (
                         <div key={entity_type} className="mb-10">
                             <div className="w-fit">
                                 <span className="heading--6">{entity_type}</span>
@@ -26,7 +28,7 @@ const InfoBoxes = ({ entities_list, global_texts }) => {
                                 {[...entities].sort((a, b) => Object.values(b)[0] - Object.values(a)[0]).map((entity, index) => (
                                     <div key={`entity_${index}`}>
                                         <span className="heading--6 flex gap-2 justify-between items-end mb-3 border-y border-white/20">
-                                            <span className="block leading-7">{Object.keys(entity)[0]}:</span>
+                                            <span className="block leading-7">{Object.keys(entity)[0]}</span>
                                             <span className="block leading-7">{Object.values(entity)[0]}</span>
                                         </span>
                                     </div>

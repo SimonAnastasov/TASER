@@ -18,7 +18,7 @@ const GlobalAnalysisResults = () => {
     return (
         <>
             {/* Show global sentiment */}
-            <div className="mt-8 flex gap-2 justify-center items-center">
+            <div className="mt-4 flex gap-2 justify-center items-center">
                 <SentimentIcon sentiment={analysisResult.Global_sentiment}/>
                 <span className="heading--5">Sentiment: {analysisResult.Global_sentiment[0].toUpperCase() + analysisResult.Global_sentiment.slice(1)}</span>
                 <SentimentIcon sentiment={analysisResult.Global_sentiment}/>
