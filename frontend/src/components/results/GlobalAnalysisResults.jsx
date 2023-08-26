@@ -1,6 +1,10 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 
+import InfoButton from '../utils/InfoButton'
+import { INFO_BOXES_ARE_SCROLLABLE } from '../../utils/infoTexts'
+import SentimentIcon from '../utils/SentimentIcon'
+
 const GlobalAnalysisResults = () => {
     const analysisResult = useSelector(state => state?.analysisResult?.result)
 
@@ -9,24 +13,15 @@ const GlobalAnalysisResults = () => {
         {title: "Abstractive Summarization", content: analysisResult?.Global_abstractive_summarization}
     ]
 
+
+    if (!analysisResult) return <></>;
+
     return (
         <>
             <div className="mt-8 flex gap-2 justify-center items-center">
-                {
-                    analysisResult.Global_sentiment === "positive" ? (
-                        <img src="/images/icon-green-smiley.png" className="w-8" alt="icon green happy smiley"/>
-                    ) : analysisResult.Global_sentiment === "negative" ? (
-                        <img src="/images/icon-red-smiley.png" className="w-8" alt="icon red sad smiley"/>
-                    ) : (<></>)
-                }
+                <SentimentIcon sentiment={analysisResult.Global_sentiment}/>
                 <span className="heading--5">Sentiment: {analysisResult.Global_sentiment[0].toUpperCase() + analysisResult.Global_sentiment.slice(1)}</span>
-                {
-                    analysisResult.Global_sentiment === "positive" ? (
-                        <img src="/images/icon-green-smiley.png" className="w-8" alt="icon green happy smiley"/>
-                    ) : analysisResult.Global_sentiment === "negative" ? (
-                        <img src="/images/icon-red-smiley.png" className="w-8" alt="icon red sad smiley"/>
-                    ) : (<></>)
-                }
+                <SentimentIcon sentiment={analysisResult.Global_sentiment}/>
             </div>
 
             <div className="lg:px-6 mx-auto mt-8 grid grid-cols-1 lg:grid-cols-3 gap-y-8 lg:gap-8">
