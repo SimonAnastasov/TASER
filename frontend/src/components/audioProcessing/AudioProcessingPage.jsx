@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 import InfoButton from '../utils/InfoButton'
 import { INFO_DO_NOT_REFRESH_PAGE } from '../../utils/infoTexts'
-import { setPageContent } from '../../redux/reducers/pageContentSlice';
 import { setAnalysisResult } from '../../redux/reducers/analysisResultSlice';
 import { TEST_ANALYSIS_RESULT_RESPONSE } from '../../utils/testingData';
 
 const AudioProcessingPage = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     
     // serverStatus: 0 - server is receiving the audio file;
     //               1 - server is processing the audio file;
@@ -33,8 +34,8 @@ const AudioProcessingPage = () => {
             // Save result in redux store
             dispatch(setAnalysisResult(TEST_ANALYSIS_RESULT_RESPONSE))
 
-            // Set page content to results page
-            dispatch(setPageContent(2));
+            // Redirect to analysis results page
+            navigate("/analysis");
         }, 1000);
         
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -75,8 +76,8 @@ const AudioProcessingPage = () => {
     )
 
     function restoreHomepageToTryAgain(e) {
-        // Set page content to homepage
-        dispatch(setPageContent(0));
+        // Redirect to homepage
+        navigate("/");
     }
 }
 

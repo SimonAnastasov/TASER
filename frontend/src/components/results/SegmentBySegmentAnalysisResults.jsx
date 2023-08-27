@@ -12,7 +12,7 @@ const SegmentBySegmentAnalysisResults = () => {
     const [shownSegmentNumber, setShownSegmentNumber] = useState(0)
     
 
-    if (!analysisResult) return <></>;
+    if (!analysisResult || Object.keys(analysisResult).length === 0) return <></>;
 
     return (
         <>

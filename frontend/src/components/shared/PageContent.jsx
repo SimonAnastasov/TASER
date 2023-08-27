@@ -1,25 +1,24 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+
+import { Routes, Route } from 'react-router-dom';
 
 import Homepage from '../homepage/Homepage'
 import AudioProcessingPage from '../audioProcessing/AudioProcessingPage'
 import ResultsPage from '../results/ResultsPage'
 
-const PageContent = () => {
-    const pageContent = useSelector(state => state.pageContent.content)
+import LogIn from '../accounts/LogIn';
+import SignUp from '../accounts/SignUp';
 
+const PageContent = () => {
     return (
-        <>
-            {
-                pageContent === 0 ? (
-                    <Homepage/>
-                ) : pageContent === 1 ? (
-                    <AudioProcessingPage/>
-                ) : pageContent === 2 ? (
-                    <ResultsPage/>
-                ) : (<></>)
-            }
-        </>
+        <Routes>
+            <Route exact path='/' element={<Homepage/>}></Route>
+            <Route exact path='/processing' element={<AudioProcessingPage/>}></Route>
+            <Route exact path='/analysis' element={<ResultsPage/>}></Route>
+
+            <Route exact path='/login' element={<LogIn/>}></Route>
+            <Route exact path='/signup' element={<SignUp/>}></Route>
+        </Routes>
     )
 }
 

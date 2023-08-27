@@ -14,7 +14,7 @@ const ResultsPage = () => {
 
     return (
         <div className="px-6 lg:px-0">
-            {analysisResult ? (
+            {analysisResult && Object.keys(analysisResult).length > 0 ? (
                 <>
                     <div className="mb-8 lg:mb-16 w-fit mx-auto text-sm lg:text-lg">
                         <ToggleShownAnalysis/>
@@ -35,7 +35,7 @@ const ResultsPage = () => {
                     <div className="py-20"></div>
                 </>
             ) : (
-                <p className="heading--3 text-center">No results to be shown.</p>
+                <p className="heading--3 text-center">No analysis to be shown.</p>
             )}
         </div>
     )
