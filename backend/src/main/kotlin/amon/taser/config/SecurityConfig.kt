@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.builders.WebSecurity
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
@@ -28,7 +30,7 @@ class JWTWebSecurityConfig(
 
     @Throws(Exception::class)
     @Bean
-    public fun configure(http: HttpSecurity, authManager: AuthenticationManager): SecurityFilterChain {
+    fun configure(http: HttpSecurity, authManager: AuthenticationManager): SecurityFilterChain {
         http.cors().and().csrf().disable()
             .authorizeRequests()
             .requestMatchers("/login","/api/**").permitAll()
@@ -40,6 +42,12 @@ class JWTWebSecurityConfig(
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         return http.build()
     }
+
+    @Bean
+    fun webSecurityCustomizer(): WebSecurityCustomizer? {
+        return WebSecurityCustomizer { web: WebSecurity -> web.ignoring().requestMatchers("/api/register") }
+    }
+
 
     @Bean
     @Throws(java.lang.Exception::class)

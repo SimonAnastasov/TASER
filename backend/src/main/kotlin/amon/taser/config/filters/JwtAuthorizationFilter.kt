@@ -42,7 +42,7 @@ class JWTAuthorizationFilter(
 
     override fun shouldNotFilter(request: HttpServletRequest): Boolean {
         val url = request.requestURI
-        return url.contains("login")
+        return url.contains("register").or(url.contains("login"))
     }
 }
 

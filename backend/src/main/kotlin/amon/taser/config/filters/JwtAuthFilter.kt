@@ -19,7 +19,6 @@ import org.springframework.security.core.AuthenticationException
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-import org.springframework.stereotype.Component
 import java.io.IOException
 import java.nio.charset.StandardCharsets
 import java.util.*
@@ -79,4 +78,5 @@ class JwtAuthenticationFilter(authenticationManager: AuthenticationManager, user
         response.addHeader(JwtAuthConstants.HEADER_STRING, JwtAuthConstants.TOKEN_PREFIX + token)
         return JwtAuthConstants.TOKEN_PREFIX + token
     }
+     
 }
