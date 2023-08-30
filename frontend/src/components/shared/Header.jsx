@@ -10,8 +10,8 @@ const Header = () => {
                 </Link>
             </div>
             <div className="flex gap-4">
-                <Link to="/login" className="--button button--dark-inverted">Log In</Link>
                 <Link to="/signup" className="--button button--primary-inverted">Sign Up</Link>
+                <Link to="/login" className="--button button--dark-inverted">Log In</Link>
             </div>
         </header>
     )
