@@ -10,7 +10,9 @@
 <br/>
 
 - Backend:
-    - [ ] --
+    - [ ] Timestamp Created on taser_user & audio_transcription tables.
+    - [ ] Don't allow multiple users with same username to be registered.
+    - [ ] Error handling with error messages on controllers, errors will be displayed on the front end.
 
 <br/>
 
