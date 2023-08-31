@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
 import { serverApiUrl } from '../../utils/envVariables'
 
-import { setMessageLoginPage } from '../../redux/reducers/accountSlice';
+import { setMessageLoginPage, setMessageRegisterPage } from '../../redux/reducers/accountSlice';
 
 const SignUp = () => {
     const navigate = useNavigate();
@@ -14,7 +14,7 @@ const SignUp = () => {
     const account = useSelector(state => state?.account);
     
     function handleSignUp() {
-        const username = document.getElementById('usernameSignUp').value;
+        const username = document.getElementById('usernameSignUp').value.toLowerCase();
         const password = document.getElementById('passwordSignUp').value;
 
         if (username && password && username.length > 0 && password.length > 0) {
@@ -25,16 +25,34 @@ const SignUp = () => {
                 password,
             })
                 .then(response => {
-                    if (response.status === 200) {
+                    const data = response?.data;
+                    if (!data?.error) {
+                        // Success -> Remove any success/error message from Sign Up Page
+                        dispatch(setMessageRegisterPage({
+                            message: "",
+                            isError: false,
+                        }));
+                        
+                        // Set success message on Login Page and redirect to Login Page
                         dispatch(setMessageLoginPage({
                             message: "You have successfully signed up! You can log in now.",
                             isError: false,
                         }));
                         navigate("/login");
                     }
+                    else {
+                        // Error -> Set error message on Sign Up Page
+                        dispatch(setMessageRegisterPage({
+                            message: data?.message,
+                            isError: true,
+                        }));
+                    }
                 })
                 .catch(error => {
-                    alert("Error");
+                    dispatch(setMessageRegisterPage({
+                        message: "Unknown error. Please try again later.",
+                        isError: true,
+                    }));
                     console.log(error);
                 });
         }

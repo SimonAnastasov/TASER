@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
 import { serverApiUrl } from '../../utils/envVariables'
 
-import { setAccount, setLoggedIn } from '../../redux/reducers/accountSlice';
+import { setAccount, setLoggedIn, setMessageLoginPage } from '../../redux/reducers/accountSlice';
 
 import { setCookie } from '../../utils/functions/cookies';
 
@@ -16,7 +16,7 @@ const LogIn = () => {
     const account = useSelector(state => state?.account);
 
     function handleLogIn() {
-        const username = document.getElementById('usernameLogIn').value;
+        const username = document.getElementById('usernameLogIn').value.toLowerCase();
         const password = document.getElementById('passwordLogIn').value;
 
         if (username && password && username.length > 0 && password.length > 0) {
@@ -27,17 +27,35 @@ const LogIn = () => {
                 password,
             })
                 .then(response => {
-                    if (response.status === 200) {
-                        setCookie("bearerToken", response.data, 10);
+                    const data = response?.data;
+                    if (!data?.error) {
+                        // Success -> Remove any success/error message from Login Page
+                        dispatch(setMessageLoginPage({
+                            message: "",
+                            isError: false,
+                        }));
+
+                        // Set account (Acknowledge successful login)
+                        setCookie("bearerToken", response.data.bearerToken, 10);
                         setCookie("username", username, 10);
                         
                         dispatch(setLoggedIn(true));
                         dispatch(setAccount({username}));
                         navigate("/");
                     }
+                    else {
+                        // Error -> Set error message on Login Page
+                        dispatch(setMessageLoginPage({
+                            message: data?.message,
+                            isError: true,
+                        }));
+                    }
                 })
                 .catch(error => {
-                    alert("Error");
+                    dispatch(setMessageLoginPage({
+                        message: "Unknown error. Please try again later.",
+                        isError: true,
+                    }));
                     console.log(error);
                 });
         }

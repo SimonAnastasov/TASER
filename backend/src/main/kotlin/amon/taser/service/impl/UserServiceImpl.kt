@@ -33,4 +33,8 @@ class UserServiceImpl(
                     .build()
         }
     }
+
+    override fun checkUsernameAlreadyExists(username: String): Boolean {
+        return userRepository.findByUsername(username) != null
+    }
 }

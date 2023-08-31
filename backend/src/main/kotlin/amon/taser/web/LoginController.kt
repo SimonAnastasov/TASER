@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.http.ResponseEntity
 
 
 @RestController
@@ -26,8 +27,21 @@ class LoginRestController(filter: JwtAuthenticationFilter) {
     fun doLogin(
         request: HttpServletRequest,
         response: HttpServletResponse
-    ): String {
-        val auth: Authentication = filter.attemptAuthentication(request, response)
-        return filter.generateJwt(response, auth)
+    ):ResponseEntity<Any> {
+        try {
+            val auth: Authentication = filter.attemptAuthentication(request, response)
+            val token = filter.generateJwt(response, auth)
+            val body = mapOf(
+                "bearerToken" to token
+            )
+            return ResponseEntity.ok(body);
+        }
+        catch (e: Exception) {
+            val errorMessage = mapOf(
+                "error" to true,
+                "message" to "You entered invalid credentials."
+            )
+            return ResponseEntity.ok(errorMessage)
+        }
     }
 }

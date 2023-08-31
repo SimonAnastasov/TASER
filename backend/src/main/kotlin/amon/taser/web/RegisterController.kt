@@ -17,13 +17,27 @@ class RegisterController (
     fun register(
         @RequestBody registrationDto: RegistrationDto
     ):ResponseEntity<Any> {
-        val username = registrationDto.username
+        val username = registrationDto.username.toLowerCase();
         val password = passwordEncoder.encode(registrationDto.password)
+
+        val checkUsernameAlreadyExists = userService.checkUsernameAlreadyExists(username)
+        if (checkUsernameAlreadyExists) {
+            val errorMessage = mapOf(
+                "error" to true,
+                "message" to "Username already exists. Please choose another username."
+            )
+            return ResponseEntity.ok(errorMessage)
+        }
+
         val createdUser = userService.createUser(username, password)
         return if (createdUser != null) {
-            ResponseEntity.ok(createdUser)
+            ResponseEntity.ok(null)
         } else {
-            ResponseEntity.badRequest().build()
+            val errorMessage = mapOf(
+                "error" to true,
+                "message" to "Something went wrong. Please try again later."
+            )
+            ResponseEntity.ok(errorMessage)
         }
     }
 }
