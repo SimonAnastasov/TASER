@@ -7,7 +7,7 @@ import { serverApiUrl } from '../../utils/envVariables'
 
 import { setAccount, setLoggedIn } from '../../redux/reducers/accountSlice';
 
-import { setCookie } from '../../utils/functions';
+import { setCookie } from '../../utils/functions/cookies';
 
 const LogIn = () => {
     const dispatch = useDispatch();
@@ -29,6 +29,7 @@ const LogIn = () => {
                 .then(response => {
                     if (response.status === 200) {
                         setCookie("bearerToken", response.data, 10);
+                        setCookie("username", username, 10);
                         
                         dispatch(setLoggedIn(true));
                         dispatch(setAccount({username}));

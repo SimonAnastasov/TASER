@@ -1,9 +1,20 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { clearCookie } from '../../utils/functions/cookies';
+import { setAccount, setLoggedIn } from '../../redux/reducers/accountSlice';
 
 const Header = () => {
+    const dispatch = useDispatch();
+    
     const account = useSelector(state => state?.account)
+
+    function handleLogOut() {
+        clearCookie("bearerToken");
+        clearCookie("username");
+        dispatch(setLoggedIn(false));
+        dispatch(setAccount({username: ""}));
+    }
 
     return (
         <header className="absolute inset-0 bottom-auto bg-primary text-white py-4 px-4 lg:px-16 flex justify-between items-center">
@@ -16,7 +27,7 @@ const Header = () => {
                 {account?.loggedIn ? (
                     <>
                         <Link to="/history" className="--button button--primary-inverted">History</Link>
-                        <Link to="/logout" className="--button button--dark-inverted">Log Out</Link>
+                        <button className="--button button--dark-inverted" onClick={handleLogOut}>Log Out</button>
                     </>
                 ) : (
                     <>
