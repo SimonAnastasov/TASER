@@ -1,21 +1,24 @@
 package amon.taser.service.impl
 
+import amon.taser.model.User
 import amon.taser.model.AudioTranscription
 import amon.taser.repository.TranscriptionRepository
 import amon.taser.service.AudioTranscriptionApi
+import amon.taser.service.UserService
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
 
 @Service
 class FakeAudioTranscriptionApi (
-        val audioTranscriptionRepository: TranscriptionRepository
+        val audioTranscriptionRepository: TranscriptionRepository,
+        val userService: UserService
 ): AudioTranscriptionApi {
-    override fun startTranscription(audioFile: MultipartFile): UUID? {
+    override fun startTranscription(audioFile: MultipartFile, user: User?): UUID? {
         val audioTranscription = AudioTranscription(
                 text = output,
                 filename = audioFile.originalFilename!!,
-                user = null,
+                user = user,
                 id = null
         )
         val aud = audioTranscriptionRepository.save(audioTranscription)
@@ -24,7 +27,8 @@ class FakeAudioTranscriptionApi (
     }
 
     private fun transcribe(audioFileID: UUID) {
-        Thread.sleep(10000) // in non-fake implementation, this would be an async call to a transcription service
+        Thread.sleep(3000) // in non-fake implementation, this would be an async call to a transcription service
+        
         val audioFile = audioTranscriptionRepository.findById(audioFileID).get()
         audioTranscriptionRepository.save(audioFile.copy(isCompleted = true))
     }

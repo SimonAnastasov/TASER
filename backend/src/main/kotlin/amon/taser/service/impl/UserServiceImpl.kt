@@ -21,6 +21,10 @@ class UserServiceImpl(
         return userRepository.findById(username).get()
     }
 
+    override fun getUserByUsername(username: String): User? {
+        return userRepository.findByUsername(username)
+    }
+
     override fun loadUserByUsername(username: String?): UserDetails {
         val user = username?.let { userRepository.findByUsername(it) }
         if (user == null){

@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity
 
 
 @RestController
-//@CrossOrigin(origins = ["http://localhost:3000", "http://localhost:3001"])
 @RequestMapping("/api/login")
 class LoginRestController(filter: JwtAuthenticationFilter) {
     private val filter: JwtAuthenticationFilter

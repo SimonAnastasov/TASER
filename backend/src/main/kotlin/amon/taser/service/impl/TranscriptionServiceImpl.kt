@@ -1,5 +1,6 @@
 package amon.taser.service.impl
 
+import amon.taser.model.User
 import amon.taser.repository.TranscriptionRepository
 import amon.taser.service.AudioTranscriptionApi
 import amon.taser.service.TranscriptionService
@@ -12,8 +13,9 @@ class TranscriptionServiceImpl(
         val audioTranscriptionApi: AudioTranscriptionApi,
         val transcriptionRepository: TranscriptionRepository
 ): TranscriptionService {
-    override fun startTranscription(file: MultipartFile): UUID? {
-        return audioTranscriptionApi.startTranscription(file)
+
+    override fun startTranscription(file: MultipartFile, user: User?): UUID? {
+        return audioTranscriptionApi.startTranscription(file, user)
     }
 
     override fun checkTranscriptionStatus(id: UUID): Boolean {

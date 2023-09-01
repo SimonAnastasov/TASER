@@ -30,14 +30,20 @@ class JWTAuthorizationFilter(
         chain.doFilter(request, response)
     }
 
-    private fun getToken(header: String): UsernamePasswordAuthenticationToken? {
+    public fun getToken(header: String): UsernamePasswordAuthenticationToken? {
         // parse the token.
-        val user: String = JWT.require(Algorithm.HMAC256(JwtAuthConstants.SECRET.toByteArray()))
-            .build()
-            .verify(header.replace(JwtAuthConstants.TOKEN_PREFIX, ""))
-            .subject ?: return null
-        val userDetails: String = ObjectMapper().readValue(user, String::class.java)
-        return UsernamePasswordAuthenticationToken(userDetails, "", null)
+        try {
+            val user: String = JWT.require(Algorithm.HMAC256(JwtAuthConstants.SECRET.toByteArray()))
+                .build()
+                .verify(header.replace(JwtAuthConstants.TOKEN_PREFIX, ""))
+                .subject ?: return null
+            val userDetails: String = ObjectMapper().readValue(user, String::class.java)
+            return UsernamePasswordAuthenticationToken(userDetails, "", null)
+        }
+        catch (e: Exception) {
+            println("Drama")
+            return null
+        }
     }
 
     override fun shouldNotFilter(request: HttpServletRequest): Boolean {
