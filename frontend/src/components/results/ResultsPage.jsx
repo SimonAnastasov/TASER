@@ -42,6 +42,7 @@ const ResultsPage = () => {
                     <p className="heading--3 text-center">No analysis to be shown.</p>
                     <div className="mt-8 flex flex-col lg:flex-row gap-4 lg:gap-8 justify-center items-center">
                         <button className="--button button--primary" onClick={handleGoBackHome}>← Go Back Home</button>
+                        <button className="--button button--primary" onClick={handleViewPastAnalyses}>View Past Analyses →</button>
                     </div>
                 </>
             )}
@@ -50,6 +51,10 @@ const ResultsPage = () => {
 
     function handleGoBackHome(e) {
         navigate("/");
+    }
+
+    function handleViewPastAnalyses(e) {
+        navigate("/history");
     }
 }
 

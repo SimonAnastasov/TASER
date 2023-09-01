@@ -69,13 +69,19 @@ const SignUp = () => {
             )}
 
             <div className="mt-4 max-w-[400px] mx-auto flex flex-col justify-center items-center gap-4">
-                <input id="usernameSignUp" className="w-full heading--6 py-3 px-8 rounded-xl bg-transparent border-2 border-black/20" type="text" placeholder="Username"/>
-                <input id="passwordSignUp" className="w-full heading--6 py-3 px-8 rounded-xl bg-transparent border-2 border-black/20" type="password" placeholder="Password"/>
+                <input id="usernameSignUp" className="w-full heading--6 py-3 px-8 rounded-xl bg-transparent border-2 border-black/20" type="text" placeholder="Username" onKeyDown={handleKeyDown}/>
+                <input id="passwordSignUp" className="w-full heading--6 py-3 px-8 rounded-xl bg-transparent border-2 border-black/20" type="password" placeholder="Password" onKeyDown={handleKeyDown}/>
 
                 <button className="lg:w-full --button button--success-inverted mt-6" onClick={handleSignUp}>Sign Up</button>
             </div>
         </div>
     )
+
+    function handleKeyDown(e) {
+        if (e.key === "Enter") {
+            handleSignUp();
+        }
+    }
 }
 
 export default SignUp
