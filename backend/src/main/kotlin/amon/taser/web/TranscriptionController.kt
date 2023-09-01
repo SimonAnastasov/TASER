@@ -48,8 +48,11 @@ class TranscriptionController(
             }
         }
         
-        val transcriptionUUID = transcriptionService.startTranscription(file, user)
-        return ResponseEntity.ok(transcriptionUUID)
+        val transcriptionResult = transcriptionService.startTranscription(file, user)
+        return ResponseEntity.ok(mapOf(
+            "audioFileId" to transcriptionResult["id"],
+            "transcription" to transcriptionResult["text"]
+        ))
     }
 
     @GetMapping("/api/checkResult")

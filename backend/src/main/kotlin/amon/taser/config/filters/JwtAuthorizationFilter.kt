@@ -41,7 +41,6 @@ class JWTAuthorizationFilter(
             return UsernamePasswordAuthenticationToken(userDetails, "", null)
         }
         catch (e: Exception) {
-            println("Drama")
             return null
         }
     }

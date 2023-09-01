@@ -1,72 +1,53 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux';
+import React from 'react'
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import InfoButton from '../utils/InfoButton'
 import { INFO_DO_NOT_REFRESH_PAGE } from '../../utils/infoTexts'
-import { setAnalysisResult } from '../../redux/reducers/analysisResultSlice';
-import { TEST_ANALYSIS_RESULT_RESPONSE } from '../../utils/testingData';
 
 const AudioProcessingPage = () => {
-    const dispatch = useDispatch();
     const navigate = useNavigate();
-    
-    // serverStatus: 0 - server is receiving the audio file;
-    //               1 - server is processing the audio file;
-    //               2 - server has finished processing the audio file;
-    //               3 - server has encountered an error while processing the audio file;
-    const [serverStatus, setServerStatus] = useState(0);
 
-    useEffect(() => {
-        // change serverStatus to 1 after 500 milliseconds
-        setTimeout(() => {
-            setServerStatus(1);
-
-            // TODO: replace this with real audio processing id
-            // it will help to restore the audio processing page if user refreshes the page
-            localStorage.setItem('audioProcessingId', 12304);
-        }, 500);
-
-        // change serverStatus to 2 after 1 second
-        setTimeout(() => {
-            setServerStatus(2);
-
-            // Save result in redux store
-            dispatch(setAnalysisResult(TEST_ANALYSIS_RESULT_RESPONSE))
-
-            // Redirect to analysis results page
-            navigate("/analysis");
-        }, 1000);
-        
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    const audioProcessing = useSelector(state => state?.audioProcessing);
 
     return (
         <div className="px-6 lg:px-0">
             <div className="flex justify-center mb-6">
                 {
-                    serverStatus !== 3 ? (
-                        <img src="/images/icon-spinner.png" className="w-12 animate-spin" alt="icon spinner"/>
-                    ) : (
+                    audioProcessing.audioProcessingStatus === 3 ? (
                         <p className="opacity-60 text-5xl">❌</p>
+                    ) : audioProcessing.audioProcessingStatus === 2 ? (
+                        <></>
+                    ) : (
+                        <img src="/images/icon-spinner.png" className="w-12 animate-spin" alt="icon spinner"/>
                     )
                 }
             </div>
             
             {
-                serverStatus === 0 ? (
+                audioProcessing.audioProcessingStatus === 0 ? (
                     <p className="heading--3 text-center">The server is receiving the Audio File</p>
-                ) : serverStatus === 1 ? (
+                ) : audioProcessing.audioProcessingStatus === 1 ? (
                     <p className="heading--3 text-center">The server is processing the Audio File</p>
-                ) : serverStatus === 3 ? (
+                ) : audioProcessing.audioProcessingStatus === 2 ? (
+                    <>
+                        <p className="heading--3 text-center">The server has finished processing the Audio File</p>
+                        <div className="mt-8 flex flex-col lg:flex-row gap-4 lg:gap-8 justify-center items-center">
+                            <button className="--button button--primary" onClick={handleGoBackHome}>← Go Back Home</button>
+                            <button className="--button button--primary" onClick={handleViewAnalysis}>View Analysis →</button>
+                        </div>    
+                    </>
+                ) : audioProcessing.audioProcessingStatus === 3 ? (
                     <>
                         <p className="heading--3 text-center">The server has encountered an error<br/>while processing the Audio File</p>
-                        <button type="button" className="--button button--primary w-fit mx-auto mt-12" onClick={restoreHomepageToTryAgain}>Try Again</button>
+                        <button type="button" className="--button button--primary w-fit mx-auto mt-12" onClick={handleGoBackHome}>Try Again</button>
                     </>
                 ) : (<></>)
             }
 
-            {serverStatus === 0 && (
+            {/* Ideally not refreshing should be only recommended when server is receiving audio file (audioProcessingStatus = 0) */}
+            {/* This can be done if we have async enabled in the backend */}
+            {audioProcessing.audioProcessingStatus === 1 && (
                 <div className="--small-text text-center mt-2 flex justify-center items-center gap-2">
                     Please do not refresh the page
                     <InfoButton infoText={INFO_DO_NOT_REFRESH_PAGE}/>
@@ -75,9 +56,12 @@ const AudioProcessingPage = () => {
         </div>
     )
 
-    function restoreHomepageToTryAgain(e) {
-        // Redirect to homepage
+    function handleGoBackHome(e) {
         navigate("/");
+    }
+
+    function handleViewAnalysis(e) {
+        navigate("/analysis");
     }
 }
 

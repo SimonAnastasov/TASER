@@ -1,10 +1,20 @@
-import React, { useEffect, useState }  from 'react'
+import React, { useState }  from 'react'
+
+import { useNavigate } from 'react-router-dom';
+
+import axios from 'axios'
 
 import InfoButton from '../utils/InfoButton';
 import { INFO_CONTINUE_TO_ANALYSE_AUDIO } from '../../utils/infoTexts';
-import { useNavigate } from 'react-router-dom';
+import { serverApiUrl } from '../../utils/envVariables';
+import { getCookie, setCookie } from '../../utils/functions/cookies';
+import { useDispatch } from 'react-redux';
+import { setAnalysisResult } from '../../redux/reducers/analysisResultSlice';
+
+import { setAudioProcessingStatus } from '../../redux/reducers/audioProcessingSlice';
 
 const AudioFileDropZone = () => {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     // readyState: 0 - no file selected;
@@ -22,45 +32,12 @@ const AudioFileDropZone = () => {
         }
     });
     
-    // Handle file upload
-    useEffect(() => {
-        if (document.getElementById("audioFileUpload")) {
-            document.getElementById('audioFileUpload').addEventListener('change', (e) => audioFileUploadChange(e));
-        }
-    
-        return () => {
-            if (document.getElementById("audioFileUpload")) {
-                document.getElementById('audioFileUpload').removeEventListener('change', (e) => audioFileUploadChange(e));
-            }
-        }
-    
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-    
-
-    // Handle drag & drop
-    useEffect(() => {
-        if (document.getElementById("audioFileDropZone")) {
-            document.getElementById("audioFileDropZone").addEventListener('dragenter', (e) => dragEnter(e));
-            document.getElementById("audioFileDropZone").addEventListener('dragleave', (e) => dragLeave(e));
-            document.getElementById("audioFileDropZone").addEventListener('drop', (e) => drop(e));
-        }
-    
-        return () => {
-            if (document.getElementById("audioFileDropZone")) {
-                document.getElementById("audioFileDropZone").removeEventListener('dragenter', (e) => dragEnter(e));
-                document.getElementById("audioFileDropZone").removeEventListener('dragleave', (e) => dragLeave(e));
-                document.getElementById("audioFileDropZone").removeEventListener('drop', (e) => drop(e));
-            }
-        }
-    
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [audioFileMetadata.styles])
-    
     return (
         <div className="px-6 lg:px-0">
-            <div id="audioFileDropZone" className={`relative w-full lg:w-1/3 h-[300px] mx-auto mt-16 lg:mt-20 cursor-pointer ${audioFileMetadata.styles.backgroundColorClass} transition-all duration-300 rounded-xl`}>
-                <input id="audioFileUpload" type="file" accept="audio/*" className="opacity-0 cursor-pointer absolute inset-0"/>
+            <div id="audioFileDropZone" className={`relative w-full lg:w-1/3 h-[300px] mx-auto mt-16 lg:mt-20 cursor-pointer ${audioFileMetadata.styles.backgroundColorClass} transition-all duration-300 rounded-xl`}
+                 onDragEnter={dragEnter} onDragLeave={dragLeave} onDrop={drop}
+            >
+                <input id="audioFileUpload" type="file" accept="audio/*" className="opacity-0 cursor-pointer absolute inset-0" onChange={audioFileUploadChange}/>
 
                 <div className={`w-full h-full flex justify-center items-center p-4 border-2 ${audioFileMetadata.styles.borderColorClass} ${audioFileMetadata.styles.borderStyleClass} transition-all duration-300 rounded-xl`}>
                     <div className={`${audioFileMetadata.styles.textColorClass} p-8 lg:px-40 flex flex-col gap-2 items-center`}>
@@ -107,8 +84,51 @@ const AudioFileDropZone = () => {
     )
 
     function sendAudioForProcessing(e) {
-        // Redirect to audio processing page
-        navigate("/processing");
+        let audioInput = document.getElementById('audioFileUpload');
+        
+        if (audioInput.files.length > 0) {
+            // Redirect to audio processing page
+            navigate("/processing");
+
+            let headers = {}
+            
+            let bearerToken = getCookie("bearerToken");
+            if (typeof bearerToken === "string" && bearerToken.length > 0) {
+                headers["Authorization"] = `${bearerToken}`;
+            }
+
+            const formData = new FormData();
+            formData.append('file', audioInput.files[0]);
+
+            dispatch(setAudioProcessingStatus(1));
+
+            axios.post(`${serverApiUrl}/upload`, formData, {
+                headers: {
+                    ...headers,
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+                .then(response => {
+                    const data = response?.data;
+                    console.log(data);
+                    if (!data?.error) {
+                        setCookie("currentAudioFileId", response.data.audioFileId, 10);
+
+                        dispatch(setAudioProcessingStatus(2));
+
+                        console.log(data.transcription);
+
+                        dispatch(setAnalysisResult(JSON.parse(response.data.transcription)));
+                        navigate("/analysis");
+                    }
+                })
+                .catch(error => {
+                    dispatch(setAudioProcessingStatus(3));
+
+                    alert("Error");
+                    console.log(error);
+                });
+        }
     }
 
     // Handle user wanting to remove uploaded audio file
@@ -234,6 +254,17 @@ const AudioFileDropZone = () => {
     // Then, the input field will get the new file.
     function drop(e) {
         document.getElementById('audioFileUpload').value = "";
+
+        setAudioFileMetadata({
+            name: '',
+            readyState: 0,
+            styles: {
+                borderColorClass: 'border-primary',
+                borderStyleClass: '',
+                backgroundColorClass: 'hover:bg-white/30',
+                textColorClass: 'text-primary',
+            }
+        })
     }
 }
 

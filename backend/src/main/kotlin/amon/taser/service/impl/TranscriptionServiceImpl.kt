@@ -14,7 +14,7 @@ class TranscriptionServiceImpl(
         val transcriptionRepository: TranscriptionRepository
 ): TranscriptionService {
 
-    override fun startTranscription(file: MultipartFile, user: User?): UUID? {
+    override fun startTranscription(file: MultipartFile, user: User?): Map<String, String> {
         return audioTranscriptionApi.startTranscription(file, user)
     }
 

@@ -7,8 +7,11 @@ import ToggleShownAnalysis from './ToggleShownAnalysis'
 
 import InfoButton from '../utils/InfoButton'
 import { INFO_RESULTS_PAGE } from '../../utils/infoTexts'
+import { useNavigate } from 'react-router-dom'
 
 const ResultsPage = () => {
+    const navigate = useNavigate();
+    
     const analysisResult = useSelector(state => state?.analysisResult?.result)
     const shownAnalysis = useSelector(state => state?.shownAnalysis?.shownAnalysis)
 
@@ -35,10 +38,19 @@ const ResultsPage = () => {
                     <div className="py-20"></div>
                 </>
             ) : (
-                <p className="heading--3 text-center">No analysis to be shown.</p>
+                <>
+                    <p className="heading--3 text-center">No analysis to be shown.</p>
+                    <div className="mt-8 flex flex-col lg:flex-row gap-4 lg:gap-8 justify-center items-center">
+                        <button className="--button button--primary" onClick={handleGoBackHome}>← Go Back Home</button>
+                    </div>
+                </>
             )}
         </div>
     )
+
+    function handleGoBackHome(e) {
+        navigate("/");
+    }
 }
 
 export default ResultsPage
