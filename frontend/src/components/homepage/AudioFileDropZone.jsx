@@ -34,7 +34,7 @@ const AudioFileDropZone = () => {
     
     return (
         <div className="px-6 lg:px-0">
-            <div id="audioFileDropZone" className={`relative w-full lg:w-1/3 h-[300px] mx-auto mt-16 lg:mt-20 cursor-pointer ${audioFileMetadata.styles.backgroundColorClass} transition-all duration-300 rounded-xl`}
+            <div id="audioFileDropZone" className={`relative w-full lg:w-1/3 h-[200px] lg:h-[300px] mx-auto cursor-pointer ${audioFileMetadata.styles.backgroundColorClass} transition-all duration-300 rounded-xl`}
                  onDragEnter={dragEnter} onDragLeave={dragLeave} onDrop={drop}
             >
                 <input id="audioFileUpload" type="file" accept="audio/*" className="opacity-0 cursor-pointer absolute inset-0" onChange={audioFileUploadChange}/>

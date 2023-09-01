@@ -5,25 +5,20 @@
 ### To Do:
 
 - General:
-    - [ ] Send and receive Audio file from input to backend
+    - [ ] /
 
 <br/>
 
 - Backend:
-    - [ ] Timestamp Created on taser_user & audio_transcription tables.
-    - [ ] Don't allow multiple users with same username to be registered.
-    - [ ] Error handling with error messages on controllers, errors will be displayed on the front end.
+    - [ ] Error shown when audio file upload fails due to it being too large.
+    - [ ] Endpoint to get history of past transcriptions for user.
 
 <br/>
 
 - Frontend:
-    - [ ] -- Login Page
-    - [ ] -- Register Page
+    - [ ] History Dashboard
 
 <br/>
 
 - Ideas:
-    - [ ] After click on 'Analyse Audio' button, a loading screen:
-        - While audio is uploading to server, 'Please don't refresh the page' message is displayed
-        - Once audio is loaded, ideally backend should send a unique identifier (can be added to URL in frontend) for this audio file, so that even if the page is refreshed, we can still get the results.
-        - Maybe query backend API every couple of seconds for status update?
+    - [ ] /
