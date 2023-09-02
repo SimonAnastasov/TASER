@@ -9,4 +9,5 @@ import java.util.UUID
 @Repository
 interface TranscriptionRepository : JpaRepository<AudioTranscription, UUID> {
     fun findAllByUser(user: User): List<AudioTranscription>
+    fun findAllByUserOrderByTimestampUpdatedDesc(user: User): List<AudioTranscription>
 }

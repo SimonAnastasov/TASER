@@ -5,7 +5,8 @@ import SentimentIcon from '../utils/SentimentIcon'
 import InfoBoxes from './InfoBoxes'
 
 const GlobalAnalysisResults = () => {
-    const analysisResult = useSelector(state => state?.analysisResult?.result)
+    const analysis = useSelector(state => state?.analysisResult?.result)
+    const analysisResult = analysis?.id ? JSON.parse(analysis?.text) : null;
 
     const global_texts = [
         {title: "Transcription Text", content: analysisResult?.Global_text},

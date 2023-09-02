@@ -15,7 +15,7 @@ class TranscriptionServiceImpl(
         val transcriptionRepository: TranscriptionRepository
 ): TranscriptionService {
 
-    override fun startTranscription(file: MultipartFile, user: User?): Map<String, String> {
+    override fun startTranscription(file: MultipartFile, user: User?): AudioTranscription? {
         return audioTranscriptionApi.startTranscription(file, user)
     }
 
@@ -23,11 +23,11 @@ class TranscriptionServiceImpl(
         return transcriptionRepository.findById(id).get().isCompleted
     }
 
-    override fun getTranscriptionResult(id: UUID): String? {
-        return transcriptionRepository.findById(id).get().text
+    override fun getTranscriptionResult(id: UUID): AudioTranscription? {
+        return transcriptionRepository.findById(id).get()
     }
 
     override fun getTranscriptionsHistoryForUser(user: User): List<AudioTranscription> {
-        return transcriptionRepository.findAllByUser(user)
+        return transcriptionRepository.findAllByUserOrderByTimestampUpdatedDesc(user)
     }
 }

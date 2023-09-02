@@ -6,7 +6,9 @@ import InfoButton from '../utils/InfoButton';
 import InfoBoxes from './InfoBoxes';
 
 const SegmentBySegmentAnalysisResults = () => {
-    const analysisResult = useSelector(state => state?.analysisResult?.result)
+    const analysis = useSelector(state => state?.analysisResult?.result)
+    const analysisResult = analysis?.id ? JSON.parse(analysis?.text) : null;
+
     const totalSegments = analysisResult.segments.length;
 
     const [shownSegmentNumber, setShownSegmentNumber] = useState(0)

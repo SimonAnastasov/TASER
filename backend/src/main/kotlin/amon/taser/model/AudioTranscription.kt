@@ -1,5 +1,6 @@
 package amon.taser.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 import java.time.Instant
 import java.util.UUID
@@ -7,9 +8,14 @@ import java.util.UUID
 @Entity
 class AudioTranscription(
     @Column(length = 65535) val text: String,
+
     val filename: String,
+    
     val isCompleted: Boolean = false,
+
+    @JsonIgnore
     @ManyToOne val user: User?,
+    
     @Id @GeneratedValue(strategy = GenerationType.UUID) val id: UUID?,
 
     @Column(name = "timestamp_created")

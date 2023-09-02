@@ -14,7 +14,7 @@ class FakeAudioTranscriptionApi (
         val audioTranscriptionRepository: TranscriptionRepository,
         val userService: UserService
 ): AudioTranscriptionApi {
-    override fun startTranscription(audioFile: MultipartFile, user: User?): Map<String, String> {
+    override fun startTranscription(audioFile: MultipartFile, user: User?): AudioTranscription? {
         val audioTranscription = AudioTranscription(
                 text = output,
                 filename = audioFile.originalFilename!!,
@@ -24,10 +24,7 @@ class FakeAudioTranscriptionApi (
         val aud = audioTranscriptionRepository.save(audioTranscription)
         aud.id?.let { transcribe(it) }
 
-        return mapOf(
-            "id" to aud.id.toString(),
-            "text" to aud.text.toString()
-        )
+        return aud
     }
 
     private fun transcribe(audioFileID: UUID) {

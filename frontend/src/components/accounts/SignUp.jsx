@@ -53,7 +53,6 @@ const SignUp = () => {
                         message: "Unknown error. Please try again later.",
                         isError: true,
                     }));
-                    console.log(error);
                 });
         }
     }

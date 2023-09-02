@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RequestHeader
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
@@ -53,8 +54,7 @@ class TranscriptionController(
         
         val transcriptionResult = transcriptionService.startTranscription(file, user)
         return ResponseEntity.ok(mapOf(
-            "audioFileId" to transcriptionResult["id"],
-            "transcription" to transcriptionResult["text"]
+            "transcription" to transcriptionResult
         ))
     }
 
@@ -78,11 +78,40 @@ class TranscriptionController(
         ))
     }
 
+    @GetMapping("/api/transcription/{id}")
+    fun getTranscription(
+        @PathVariable id: UUID,
+        @RequestHeader("Authorization", required = false) authorizationHeader: String?
+    ): ResponseEntity<Any> {
+
+        val user: User? = filter.getUserFromAuthorizationHeader(authorizationHeader)
+
+        if (user == null) {
+            return ResponseEntity.ok(mapOf(
+                "error" to true,
+                "notLoggedIn" to true
+            ))
+        }
+
+        val transcription = transcriptionService.getTranscriptionResult(id)
+
+        return if (transcription != null) {
+            ResponseEntity.ok(mapOf(
+                "transcription" to transcription
+            ))
+        } else {
+            ResponseEntity.ok(mapOf(
+                "error" to true,
+                "message" to "Analysis not found."
+            ))
+        }
+    }
+
     @GetMapping("/api/checkResult")
     fun checkResult(@RequestParam("uuid") uuid: String) : ResponseEntity<ResponseDto> {
         val isComplete = transcriptionService.checkTranscriptionStatus(UUID.fromString(uuid))
         return if (isComplete){
-            val result = transcriptionService.getTranscriptionResult(UUID.fromString(uuid)) ?:""
+            val result = transcriptionService.getTranscriptionResult(UUID.fromString(uuid))?.text ?: ""
             ResponseEntity.ok(ResponseDto(result, true))
         } else ResponseEntity.ok(ResponseDto(null, false))
     }

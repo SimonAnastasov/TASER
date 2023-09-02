@@ -40,7 +40,7 @@ const AudioFileDropZone = () => {
                 <input id="audioFileUpload" type="file" accept="audio/*" className="opacity-0 cursor-pointer absolute inset-0" onChange={audioFileUploadChange}/>
 
                 <div className={`w-full h-full flex justify-center items-center p-4 border-2 ${audioFileMetadata.styles.borderColorClass} ${audioFileMetadata.styles.borderStyleClass} transition-all duration-300 rounded-xl`}>
-                    <div className={`${audioFileMetadata.styles.textColorClass} p-8 lg:px-40 flex flex-col gap-2 items-center`}>
+                    <div className={`${audioFileMetadata.styles.textColorClass} p-8 lg:px-20 flex flex-col gap-2 items-center`}>
                     {
                         audioFileMetadata.readyState === 0 ? (
                         <>
@@ -112,12 +112,12 @@ const AudioFileDropZone = () => {
                 .then(response => {
                     const data = response?.data;
                     if (!data?.error) {
-                        setCookie("currentAudioFileId", response.data.audioFileId, 10);
+                        setCookie("currentAudioFileId", data.transcription.id, 10);
 
                         dispatch(setAudioProcessingStatus(2));
                         dispatch(setAudioProcessingMessage(""));
 
-                        dispatch(setAnalysisResult(JSON.parse(response.data.transcription)));
+                        dispatch(setAnalysisResult(data.transcription));
                         navigate("/analysis");
                     }
                     else {

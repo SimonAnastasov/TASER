@@ -12,13 +12,20 @@ import { useNavigate } from 'react-router-dom'
 const ResultsPage = () => {
     const navigate = useNavigate();
     
-    const analysisResult = useSelector(state => state?.analysisResult?.result)
+    const analysis = useSelector(state => state?.analysisResult?.result)
+    const analysisResult = analysis?.id ? JSON.parse(analysis?.text) : null;
+
     const shownAnalysis = useSelector(state => state?.shownAnalysis?.shownAnalysis)
 
     return (
         <div className="px-6 lg:px-0">
             {analysisResult && Object.keys(analysisResult).length > 0 ? (
                 <>
+                    <div className="mb-12">
+                        <p className="--small-text text-center">Filename:</p>
+                        <p className="heading--6 text-center">{analysis.filename}</p>
+                    </div>
+
                     <div className="mb-8 lg:mb-16 w-fit mx-auto text-sm lg:text-lg">
                         <ToggleShownAnalysis/>
                     </div>
