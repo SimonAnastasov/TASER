@@ -12,10 +12,10 @@ class AudioTranscription(
     @ManyToOne val user: User?,
     @Id @GeneratedValue(strategy = GenerationType.UUID) val id: UUID?,
 
-    @Column(name = "timestamp_created", columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "timestamp_created")
     val timestampCreated: Instant = Instant.now(),
 
-    @Column(name = "timestamp_updated", columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "timestamp_updated")
     val timestampUpdated: Instant = Instant.now()
 ) {
     fun copy(

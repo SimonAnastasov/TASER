@@ -48,12 +48,33 @@ class TranscriptionController(
         @RequestParam("file") file: MultipartFile,
         @RequestHeader("Authorization", required = false) authorizationHeader: String?
     ): ResponseEntity<Any> {
-        var user: User? = filter.getUserFromAuthorizationHeader(authorizationHeader)
+
+        val user: User? = filter.getUserFromAuthorizationHeader(authorizationHeader)
         
         val transcriptionResult = transcriptionService.startTranscription(file, user)
         return ResponseEntity.ok(mapOf(
             "audioFileId" to transcriptionResult["id"],
             "transcription" to transcriptionResult["text"]
+        ))
+    }
+
+    @GetMapping("/api/history")
+    fun getTranscriptionHistory(
+        @RequestHeader("Authorization", required = false) authorizationHeader: String?
+    ): ResponseEntity<Any> {
+
+        val user: User? = filter.getUserFromAuthorizationHeader(authorizationHeader)
+
+        if (user == null) {
+            return ResponseEntity.ok(mapOf(
+                "error" to true,
+                "notLoggedIn" to true
+            ))
+        }
+
+        val transcriptionHistory = transcriptionService.getTranscriptionsHistoryForUser(user)
+        return ResponseEntity.ok(mapOf(
+            "transcriptionHistory" to transcriptionHistory
         ))
     }
 

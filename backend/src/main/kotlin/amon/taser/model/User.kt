@@ -12,9 +12,9 @@ data class User(
         val email: String,
         @Id @GeneratedValue(strategy = GenerationType.UUID) val id: UUID? = null,
         
-        @Column(name = "timestamp_created", columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP")
+        @Column(name = "timestamp_created")
         val timestampCreated: Instant = Instant.now(),
 
-        @Column(name = "timestamp_updated", columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP")
+        @Column(name = "timestamp_updated")
         val timestampUpdated: Instant = Instant.now()
 )
