@@ -57,7 +57,7 @@ class JWTWebSecurityConfig(
     @Bean
     @Throws(java.lang.Exception::class)
     fun authorizationFilter(authManager: AuthenticationManager): JWTAuthorizationFilter {
-        return JWTAuthorizationFilter(authManager)
+        return JWTAuthorizationFilter(authManager, userService)
     }
 
 }

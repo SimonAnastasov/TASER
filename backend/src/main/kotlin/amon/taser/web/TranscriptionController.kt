@@ -48,20 +48,7 @@ class TranscriptionController(
         @RequestParam("file") file: MultipartFile,
         @RequestHeader("Authorization", required = false) authorizationHeader: String?
     ): ResponseEntity<Any> {
-        var user: User? = null
-
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            // Unauthorized
-        }
-        else {
-            val token = authorizationHeader.substring(7)
-            
-            val authorizationClaims = filter.getToken(token)
-            if (authorizationClaims != null) {
-                val username: String = authorizationClaims.getName()
-                user = userService.getUserByUsername(username)
-            }
-        }
+        var user: User? = filter.getUserFromAuthorizationHeader(authorizationHeader)
         
         val transcriptionResult = transcriptionService.startTranscription(file, user)
         return ResponseEntity.ok(mapOf(

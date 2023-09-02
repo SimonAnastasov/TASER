@@ -1,5 +1,8 @@
 package amon.taser.config.filters
 
+import amon.taser.model.User
+import amon.taser.service.UserService
+
 import amon.taser.config.JwtAuthConstants
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
@@ -14,7 +17,8 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 
 
 class JWTAuthorizationFilter(
-    authenticationManager: AuthenticationManager?
+    authenticationManager: AuthenticationManager?,
+    val userService: UserService
 ) :
     BasicAuthenticationFilter(authenticationManager) {
 
@@ -43,6 +47,24 @@ class JWTAuthorizationFilter(
         catch (e: Exception) {
             return null
         }
+    }
+
+    public fun getUserFromAuthorizationHeader(authorizationHeader: String?) : User? {
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            return null
+        }
+
+        val token = authorizationHeader.substring(7)
+        
+        val authorizationClaims = this.getToken(token)
+        if (authorizationClaims != null) {
+            val username: String = authorizationClaims.getName()
+            val user = userService.getUserByUsername(username)
+
+            return user
+        }
+
+        return null
     }
 
     override fun shouldNotFilter(request: HttpServletRequest): Boolean {
