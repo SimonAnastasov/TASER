@@ -10,9 +10,8 @@
 <br/>
 
 - Backend:
-    - [ ] Timestamps on tables.
-    - [ ] Error shown when audio file upload fails due to it being too large.
     - [ ] Endpoint to get history of past transcriptions for user.
+    - [ ] Table for AnalysisReview
     - [ ] Endpoints and functionality for rating and reviews of analyses.
 
 <br/>

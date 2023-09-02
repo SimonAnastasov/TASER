@@ -8,6 +8,7 @@ import ResultsPage from '../results/ResultsPage'
 
 import LogIn from '../accounts/LogIn';
 import SignUp from '../accounts/SignUp';
+import HistoryPage from '../history/HistoryPage';
 
 const PageContent = () => {
     return (
@@ -15,6 +16,8 @@ const PageContent = () => {
             <Route exact path='/' element={<Homepage/>}></Route>
             <Route exact path='/processing' element={<AudioProcessingPage/>}></Route>
             <Route exact path='/analysis' element={<ResultsPage/>}></Route>
+
+            <Route exact path='/history' element={<HistoryPage/>}></Route>
 
             <Route exact path='/login' element={<LogIn/>}></Route>
             <Route exact path='/signup' element={<SignUp/>}></Route>
