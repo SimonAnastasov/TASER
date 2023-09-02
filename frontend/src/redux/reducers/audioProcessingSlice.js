@@ -8,14 +8,18 @@ export const audioProcessingSlice = createSlice({
         // 2 - server has finished processing the audio file;
         // 3 - server has encountered an error while processing the audio file;
         audioProcessingStatus: 2,
+        audioProcessingMessage: "",
     },
     reducers: {
         setAudioProcessingStatus: (state, action) => {
             state.audioProcessingStatus = action.payload;
+        },
+        setAudioProcessingMessage: (state, action) => {
+            state.audioProcessingMessage = action.payload;
         }
     }
 })
 
-export const { setAudioProcessingStatus } = audioProcessingSlice.actions;
+export const { setAudioProcessingStatus, setAudioProcessingMessage } = audioProcessingSlice.actions;
 
 export default audioProcessingSlice.reducer;

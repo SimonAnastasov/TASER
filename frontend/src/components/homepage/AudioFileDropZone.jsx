@@ -11,7 +11,7 @@ import { getCookie, setCookie } from '../../utils/functions/cookies';
 import { useDispatch } from 'react-redux';
 import { setAnalysisResult } from '../../redux/reducers/analysisResultSlice';
 
-import { setAudioProcessingStatus } from '../../redux/reducers/audioProcessingSlice';
+import { setAudioProcessingMessage, setAudioProcessingStatus } from '../../redux/reducers/audioProcessingSlice';
 
 const AudioFileDropZone = () => {
     const dispatch = useDispatch();
@@ -101,6 +101,7 @@ const AudioFileDropZone = () => {
             formData.append('file', audioInput.files[0]);
 
             dispatch(setAudioProcessingStatus(1));
+            dispatch(setAudioProcessingMessage(""));
 
             axios.post(`${serverApiUrl}/upload`, formData, {
                 headers: {
@@ -110,23 +111,23 @@ const AudioFileDropZone = () => {
             })
                 .then(response => {
                     const data = response?.data;
-                    console.log(data);
                     if (!data?.error) {
                         setCookie("currentAudioFileId", response.data.audioFileId, 10);
 
                         dispatch(setAudioProcessingStatus(2));
-
-                        console.log(data.transcription);
+                        dispatch(setAudioProcessingMessage(""));
 
                         dispatch(setAnalysisResult(JSON.parse(response.data.transcription)));
                         navigate("/analysis");
                     }
+                    else {
+                        dispatch(setAudioProcessingStatus(3));
+                        
+                        dispatch(setAudioProcessingMessage(data.message));
+                    }
                 })
                 .catch(error => {
                     dispatch(setAudioProcessingStatus(3));
-
-                    alert("Error");
-                    console.log(error);
                 });
         }
     }

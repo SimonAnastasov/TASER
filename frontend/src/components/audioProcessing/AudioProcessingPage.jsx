@@ -40,6 +40,12 @@ const AudioProcessingPage = () => {
                 ) : audioProcessing.audioProcessingStatus === 3 ? (
                     <>
                         <p className="heading--3 text-center">The server has encountered an error<br/>while processing the Audio File</p>
+
+                        {/* Error message */}
+                        {typeof audioProcessing.audioProcessingMessage === "string" && audioProcessing.audioProcessingMessage.length > 0 && (
+                            <p className="mt-2 heading--4 text-center">(Error: {audioProcessing.audioProcessingMessage})</p>
+                        )}
+                        
                         <button type="button" className="--button button--primary w-fit mx-auto mt-12" onClick={handleGoBackHome}>Try Again</button>
                     </>
                 ) : (<></>)

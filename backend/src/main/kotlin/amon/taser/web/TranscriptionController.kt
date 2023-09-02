@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
 
+import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.multipart.MaxUploadSizeExceededException
+
 
 @RestController
 class TranscriptionController(
@@ -26,6 +30,17 @@ class TranscriptionController(
 
     init {
         this.filter = filter
+    }
+    
+    @RestControllerAdvice
+    class GlobalExceptionHandler {
+        @ExceptionHandler(MaxUploadSizeExceededException::class)
+        fun handleMaxUploadSizeExceededException(ex: MaxUploadSizeExceededException): ResponseEntity<Any> {
+            return ResponseEntity.ok(mapOf(
+                "error" to true,
+                "message" to "Maximum upload size exceeded"
+            ))
+        }
     }
 
     @PostMapping("/api/upload")
