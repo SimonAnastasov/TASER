@@ -7,26 +7,26 @@ import java.util.UUID
 
 @Entity
 class AudioTranscriptionReview (
-    @Column(length = 65535) val reviewText: String,
-
-    val reviewRating: Float,
-    
+    @JsonIgnore
     @OneToOne val audioTranscription: AudioTranscription,
+
+    @Column(length = 65535) var reviewText: String,
+
+    var reviewRating: Float,
     
-    @Id @GeneratedValue(strategy = GenerationType.UUID) val id: UUID?,
+    @Id @GeneratedValue(strategy = GenerationType.UUID) val id: UUID? = null,
 
     @Column(name = "timestamp_created")
     val timestampCreated: Instant = Instant.now(),
 
     @Column(name = "timestamp_updated")
-    val timestampUpdated: Instant = Instant.now()
+    var timestampUpdated: Instant = Instant.now()
 ) {
     fun copy(
-            reviewText: String = this.reviewText,
-            reviewRating: Float = this.reviewRating,
             audioTranscription: AudioTranscription = this.audioTranscription,
-            id: UUID? = this.id
+            reviewText: String = this.reviewText,
+            reviewRating: Float = this.reviewRating
     ): AudioTranscriptionReview {
-        return AudioTranscriptionReview(reviewText, reviewRating, audioTranscription, id)
+        return AudioTranscriptionReview(audioTranscription, reviewText, reviewRating)
     }
 }
