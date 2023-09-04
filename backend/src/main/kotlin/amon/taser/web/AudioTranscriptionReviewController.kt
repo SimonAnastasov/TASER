@@ -91,7 +91,7 @@ class AudioTranscriptionReviewController (
         } else {
             ResponseEntity.ok(mapOf(
                 "error" to true,
-                "message" to "Unknown error."
+                "message" to "Unknown error. Please try again later."
             ))
         }
     }
@@ -121,7 +121,7 @@ class AudioTranscriptionReviewController (
         } else {
             ResponseEntity.ok(mapOf(
                 "error" to true,
-                "message" to "Unknown error."
+                "message" to "Unknown error. Please try again later."
             ))
         }
     }
@@ -150,7 +150,7 @@ class AudioTranscriptionReviewController (
         } else {
             ResponseEntity.ok(mapOf(
                 "error" to true,
-                "message" to "Unknown error."
+                "message" to "Unknown error. Please try again later."
             ))
         }
     }

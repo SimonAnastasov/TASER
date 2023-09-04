@@ -9,7 +9,7 @@ import { INFO_CONTINUE_TO_ANALYSE_AUDIO } from '../../utils/infoTexts';
 import { serverApiUrl } from '../../utils/envVariables';
 import { getCookie, setCookie } from '../../utils/functions/cookies';
 import { useDispatch } from 'react-redux';
-import { setAnalysisResult } from '../../redux/reducers/analysisResultSlice';
+import { setAnalysisResult, setAnalysisReview } from '../../redux/reducers/analysisResultSlice';
 
 import { setAudioProcessingMessage, setAudioProcessingStatus } from '../../redux/reducers/audioProcessingSlice';
 
@@ -118,6 +118,7 @@ const AudioFileDropZone = () => {
                         dispatch(setAudioProcessingMessage(""));
 
                         dispatch(setAnalysisResult(data.transcription));
+                        dispatch(setAnalysisReview(data.transcriptionReview));
                         navigate("/analysis");
                     }
                     else {

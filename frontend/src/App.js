@@ -8,6 +8,7 @@ import PageContent from "./components/shared/PageContent";
 import { getCookie } from "./utils/functions/cookies";
 
 import { setAccount, setLoggedIn } from "./redux/reducers/accountSlice";
+import Errors from "./components/errors/Errors";
 
 function App() {
     const dispatch = useDispatch();
@@ -43,6 +44,8 @@ function App() {
             <div className="w-full h-40 lg:h-48"></div>
 
             <PageContent/>
+
+            <Errors/>
 
         </div>
     );

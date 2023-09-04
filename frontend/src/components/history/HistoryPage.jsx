@@ -7,7 +7,7 @@ import { serverApiUrl } from '../../utils/envVariables'
 
 import { getCookie } from '../../utils/functions/cookies';
 import { setAccount, setLoggedIn } from '../../redux/reducers/accountSlice';
-import { setAnalysisResult } from '../../redux/reducers/analysisResultSlice';
+import { setAnalysisResult, setAnalysisReview } from '../../redux/reducers/analysisResultSlice';
 
 const HistoryPage = () => {
     const dispatch = useDispatch();
@@ -149,6 +149,7 @@ const HistoryPage = () => {
                 const data = response?.data;
                 if (!data?.error) {
                     dispatch(setAnalysisResult(data.transcription));
+                    dispatch(setAnalysisReview(data.transcriptionReview));
                     navigate("/analysis");
                 }
                 else {
