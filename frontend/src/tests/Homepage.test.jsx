@@ -18,7 +18,6 @@ describe ('Home page', () => {
     const testStore = store
     testStore.dispatch(setAccount({username: "test"}))
     testStore.dispatch(setLoggedIn(true))
-    testStore
     const produceHomepageComponent = () =>
     render(
     <Provider store={testStore}>
@@ -34,12 +33,27 @@ describe ('Home page', () => {
         expect(free_version).toBeInTheDocument();
     });
 
-    test('Welcome message renders', () => {
+    test('Welcome message renders when logged in', () => {
         produceHomepageComponent()
         let account = testStore.getState().account
         let username = account?.account?.username
         const welcome = screen.getByText('Welcome, ' + username + '!' )
         expect(welcome).toBeInTheDocument()
+    });
+
+    test('Welcome message does not render when not logged in', () => {
+        testStore.dispatch(setLoggedIn(false))
+        produceHomepageComponent()
+        let account = testStore.getState().account
+        let username = account?.account?.username
+        const welcome = screen.queryByText('Welcome, ' + username + '!' )
+        expect(welcome).not.toBeInTheDocument()
+    });
+
+    test('AudioFileDropZone renders', () => {
+        produceHomepageComponent()
+        const dropzone = screen.getByText(/Drag & Drop or Click(<br>)?/i)
+        expect(dropzone).toBeInTheDocument()
     });
 
 })
