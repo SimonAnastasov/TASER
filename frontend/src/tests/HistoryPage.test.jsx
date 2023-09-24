@@ -37,5 +37,12 @@ describe ('History page', () => {
         expect(loading).toBeInTheDocument();
     });
 
+    test('not logged in', () => {
+        testStore.dispatch(setLoggedIn(false))
+        produceHistoryComponent();
+        const notLoggedIn = screen.getByText(/You are not logged in. Please log in to view your history./i);
+        expect(notLoggedIn).toBeInTheDocument();
+    })
+
     
 })
