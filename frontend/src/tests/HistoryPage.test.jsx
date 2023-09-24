@@ -31,7 +31,11 @@ describe ('History page', () => {
         expect(history).toBeInTheDocument();
     }); 
 
-    
+    test('History component shows loading', () => {
+        produceHistoryComponent();
+        const loading = screen.getByText(/Loading.../i);
+        expect(loading).toBeInTheDocument();
+    });
 
     
 })
