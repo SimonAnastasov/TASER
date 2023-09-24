@@ -7,6 +7,7 @@ import { INFO_FREE_VERSION } from '../../utils/infoTexts'
 
 const Homepage = () => {
     const account = useSelector(state => state?.account)
+    console.log(account)
 
     return (
         <div className="px-6 lg:px-0">
