@@ -1,4 +1,4 @@
-// src/setupTests.js
+// src/tests/utils/setupTests.js
 import { server } from '../../mocks/server.js'
 // Establish API mocking before all tests.
 beforeAll(() => server.listen())
