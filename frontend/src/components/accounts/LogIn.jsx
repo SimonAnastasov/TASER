@@ -74,7 +74,7 @@ const LogIn = () => {
                 <input id="usernameLogIn" className="w-full heading--6 py-3 px-8 rounded-xl bg-transparent border-2 border-black/20" type="text" placeholder="Username" onKeyDown={handleKeyDown}/>
                 <input id="passwordLogIn" className="w-full heading--6 py-3 px-8 rounded-xl bg-transparent border-2 border-black/20" type="password" placeholder="Password" onKeyDown={handleKeyDown}/>
 
-                <button className="lg:w-full --button button--success-inverted mt-6" onClick={handleLogIn}>Log In</button>
+                <button role='submit-button' className="lg:w-full --button button--success-inverted mt-6" onClick={handleLogIn}>Log In</button>
             </div>
         </div>
     )
