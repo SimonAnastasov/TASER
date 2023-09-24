@@ -3,7 +3,7 @@ import { rest } from 'msw'
 const baseUrl = 'http://localhost:8080/api'
 
 export const handlers = [
-    rest.post('http://localhost:8080/api/login', (req, res, ctx) => {
+    rest.post(baseUrl + '/login', (req, res, ctx) => {
         const { username, password } = req.body
         console.log('username: ', username)
         if (username == 'testuser' && password == 'testuser') {
