@@ -44,3 +44,9 @@ export const INFO_IMPROVE_THIS_ANALYSIS = `
 
     This particular analysis will cost you approximately $[[[PRICE]]] to improve.
 `
+
+export const INFO_GET_PAID_PAGE = `
+    You can get paid by improving others' analyses. <br/><br/>
+
+    You can request to improve one new analysis per day. It will be chosen for you at random.
+`
