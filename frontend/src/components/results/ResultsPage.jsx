@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import GlobalAnalysisResults from './GlobalAnalysisResults'
@@ -6,7 +6,7 @@ import SegmentBySegmentAnalysisResults from './SegmentBySegmentAnalysisResults'
 import ToggleShownAnalysis from './ToggleShownAnalysis'
 
 import InfoButton from '../utils/InfoButton'
-import { INFO_RESULTS_PAGE } from '../../utils/infoTexts'
+import { INFO_IMPROVE_THIS_ANALYSIS, INFO_RESULTS_PAGE } from '../../utils/infoTexts'
 import { useNavigate } from 'react-router-dom'
 import { setAnalysisReview } from '../../redux/reducers/analysisResultSlice'
 import { getCookie } from '../../utils/functions/cookies'
@@ -30,13 +30,26 @@ const ResultsPage = () => {
 
     const account = useSelector(state => state?.account)
 
+    // Get approximation on price for improving analysis
+    const dataSize = new TextEncoder().encode(JSON.stringify(analysis)).length;
+    const priceCoefficient = 0.0001;
+    const priceForImproving = (dataSize * priceCoefficient).toFixed(2);
+
     return (
         <div className="px-6 lg:px-0">
             {analysisResult && Object.keys(analysisResult).length > 0 ? (
                 <>
-                    <div className="mb-12">
+                    <div className="mb-6">
                         <p className="--small-text text-center">Filename:</p>
                         <p className="heading--6 text-center">{analysis.filename}</p>
+                    </div>
+
+                    <div className="mb-16 w-fit mx-auto flex items-center gap-4">
+                        <div className="hidden">
+                            <InfoButton infoText={INFO_IMPROVE_THIS_ANALYSIS.replace(/\[\[\[PRICE\]\]\]/g, priceForImproving)}/>
+                        </div>
+                        <button className="--button button--success">Improve This Analysis</button>
+                        <InfoButton infoText={INFO_IMPROVE_THIS_ANALYSIS.replace(/\[\[\[PRICE\]\]\]/g, priceForImproving)}/>
                     </div>
 
                     <div className="mb-8 lg:mb-16 w-fit mx-auto text-sm lg:text-lg">

@@ -33,3 +33,14 @@ export const INFO_RESULTS_PAGE = `
 
     All of the information boxes below are scrollable when the output is large.
 `
+
+// Payments
+export const INFO_IMPROVE_THIS_ANALYSIS = `
+    You can improve this analysis by giving it to other human users to manually analyse and improve it for you. <br/><br/>
+
+    We'll find the people automatically for you, so you don't have to worry about that. <br/><br/>
+
+    <hr/> <br/>
+
+    This particular analysis will cost you approximately $[[[PRICE]]] to improve.
+`
