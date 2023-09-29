@@ -31,7 +31,7 @@ const ResultsPage = () => {
     const account = useSelector(state => state?.account)
 
     // Get approximation on price for improving analysis
-    const dataSize = new TextEncoder().encode(JSON.stringify(analysis)).length;
+    const dataSize = new TextEncoder().encode(JSON.stringify(analysisResult)).length;
     const priceCoefficient = 0.0001;
     const priceForImproving = (dataSize * priceCoefficient).toFixed(2);
 
