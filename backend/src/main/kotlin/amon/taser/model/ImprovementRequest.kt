@@ -13,6 +13,8 @@ data class ImprovementRequest(
         val newTranscriptionText: String,
         val status: String,
 
+        val improvedByCount: Int = 0,
+
         @Id @GeneratedValue(strategy = GenerationType.UUID) val id: UUID? = null,
         
         @Column(name = "timestamp_created")
