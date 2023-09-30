@@ -4,6 +4,7 @@ import amon.taser.model.User
 import amon.taser.model.AudioTranscription
 import amon.taser.repository.TranscriptionRepository
 import amon.taser.service.AudioTranscriptionApi
+import amon.taser.service.StorageService
 import amon.taser.service.UserService
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -12,7 +13,8 @@ import java.util.*
 @Service
 class FakeAudioTranscriptionApi (
         val audioTranscriptionRepository: TranscriptionRepository,
-        val userService: UserService
+        val userService: UserService,
+        val storageService: StorageService
 ): AudioTranscriptionApi {
     override fun startTranscription(audioFile: MultipartFile, user: User?): AudioTranscription? {
         val audioTranscription = AudioTranscription(
@@ -21,6 +23,7 @@ class FakeAudioTranscriptionApi (
                 user = user,
                 id = null
         )
+        storageService.storeFile(audioFile)
         val aud = audioTranscriptionRepository.save(audioTranscription)
         aud.id?.let { transcribe(it) }
 
