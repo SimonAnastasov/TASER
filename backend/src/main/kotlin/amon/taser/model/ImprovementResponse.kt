@@ -9,8 +9,8 @@ data class ImprovementResponse(
         @ManyToOne val transcription: AudioTranscription,
         @ManyToOne val employee: User,
 
-        val oldTranscriptionText: String,
-        val newTranscriptionText: String,
+        @Column(length = 65535) val oldTranscriptionText: String,
+        @Column(length = 65535) val newTranscriptionText: String,
         val status: String,
 
         @Id @GeneratedValue(strategy = GenerationType.UUID) val id: UUID? = null,

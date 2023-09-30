@@ -4,7 +4,7 @@ import amon.taser.model.ResponseDto
 import amon.taser.model.User
 import amon.taser.config.filters.JWTAuthorizationFilter
 import amon.taser.service.TranscriptionService
-// import amon.taser.service.ImprovementRequestService
+import amon.taser.service.ImprovementRequestService
 import amon.taser.service.ImprovementResponseService
 import amon.taser.service.AudioTranscriptionReviewService
 import amon.taser.service.UserService
@@ -26,7 +26,7 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException
 @RestController
 class ImprovementResponseController(
         val transcriptionService: TranscriptionService,
-        // val improvementRequestService: ImprovementRequestService,
+        val improvementRequestService: ImprovementRequestService,
         val improvementResponseService: ImprovementResponseService,
         val userService: UserService,
         filter: JWTAuthorizationFilter
