@@ -6,7 +6,7 @@ import axios from 'axios'
 import InfoButton from '../utils/InfoButton';
 import { INFO_ANALYSIS_IS_BEING_IMPROVED, INFO_IMPROVE_THIS_ANALYSIS } from '../../utils/infoTexts';
 import { setAccount, setLoggedIn } from '../../redux/reducers/accountSlice';
-import { setAnalysisImprovementInfo, setAnalysisResult } from '../../redux/reducers/analysisResultSlice';
+import { setAnalysisImprovementInfo } from '../../redux/reducers/analysisResultSlice';
 import { serverApiUrl } from '../../utils/envVariables';
 import { getCookie } from '../../utils/functions/cookies';
 import { setTextError } from '../../redux/reducers/errorsSlice';

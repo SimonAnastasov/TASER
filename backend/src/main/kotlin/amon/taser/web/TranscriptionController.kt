@@ -5,6 +5,7 @@ import amon.taser.model.User
 import amon.taser.config.filters.JWTAuthorizationFilter
 import amon.taser.service.TranscriptionService
 import amon.taser.service.AudioTranscriptionReviewService
+import amon.taser.service.ImprovementRequestService
 import amon.taser.service.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -25,6 +26,7 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException
 class TranscriptionController(
         val transcriptionService: TranscriptionService,
         val audioTranscriptionReviewService: AudioTranscriptionReviewService,
+        val improvementRequestService: ImprovementRequestService,
         val userService: UserService,
         filter: JWTAuthorizationFilter
 ){
@@ -99,10 +101,13 @@ class TranscriptionController(
 
         val transcriptionReview = audioTranscriptionReviewService.getAudioTranscriptionReviewFromAudioTranscriptionId(id)
 
+        val transcriptionImprovementRequest = improvementRequestService.getImprovementRequestFromTranscriptionIdAndEmployer(id, user)
+
         return if (transcription != null) {
             ResponseEntity.ok(mapOf(
                 "transcription" to transcription,
-                "transcriptionReview" to transcriptionReview
+                "transcriptionReview" to transcriptionReview,
+                "transcriptionImprovementInfo" to transcriptionImprovementRequest
             ))
         } else {
             ResponseEntity.ok(mapOf(

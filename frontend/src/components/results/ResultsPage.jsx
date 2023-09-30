@@ -19,11 +19,6 @@ const ResultsPage = () => {
 
     const shownAnalysis = useSelector(state => state?.shownAnalysis?.shownAnalysis);
 
-    // Get approximation on price for improving analysis
-    // const dataSize = new TextEncoder().encode(JSON.stringify(analysisResult)).length;
-    // const priceCoefficient = 0.0001;
-    // const priceForImproving = (dataSize * priceCoefficient).toFixed(2);
-
     return (
         <div className="px-6 lg:px-0">
             {analysisResult && Object.keys(analysisResult).length > 0 ? (

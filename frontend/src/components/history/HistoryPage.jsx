@@ -7,7 +7,7 @@ import { serverApiUrl } from '../../utils/envVariables'
 
 import { getCookie } from '../../utils/functions/cookies';
 import { setAccount, setLoggedIn } from '../../redux/reducers/accountSlice';
-import { setAnalysisResult, setAnalysisReview } from '../../redux/reducers/analysisResultSlice';
+import { setAnalysisImprovementInfo, setAnalysisResult, setAnalysisReview } from '../../redux/reducers/analysisResultSlice';
 
 const HistoryPage = () => {
     const dispatch = useDispatch();
@@ -150,9 +150,24 @@ const HistoryPage = () => {
                 if (!data?.error) {
                     dispatch(setAnalysisResult(data.transcription));
                     dispatch(setAnalysisReview(data.transcriptionReview));
+
+                    if (data?.transcriptionImprovementInfo) {
+                        dispatch(setAnalysisImprovementInfo({
+                            cost: ((new TextEncoder().encode(JSON.stringify(data.transcription.text)).length) * 0.0001).toFixed(2),
+                            isRequested: true,
+                            improvedBy: data?.transcriptionImprovementInfo?.improvedByCount,
+                            deadline: (new Date(new Date(data?.transcriptionImprovementInfo?.timestampCreated).setDate(new Date(data?.transcriptionImprovementInfo?.timestampCreated).getDate() + 7))).toLocaleString()
+                        }))
+                    }
+                    else {
+                        dispatch(setAnalysisImprovementInfo({}))
+                    }
+                    
                     navigate("/analysis");
                 }
                 else {
+                    dispatch(setAnalysisImprovementInfo({}))
+
                     if (data.notLoggedIn) {
                         if (account.loggedIn) {
                             dispatch(setLoggedIn(false));
@@ -171,6 +186,8 @@ const HistoryPage = () => {
                 }
             })
             .catch(error => {
+                dispatch(setAnalysisImprovementInfo({}))
+
                 setIsLoading(false);
                 setHistory([]);
                 setNoHistoryMessage({isError: true, message: "Unknown error. Please try again later."});

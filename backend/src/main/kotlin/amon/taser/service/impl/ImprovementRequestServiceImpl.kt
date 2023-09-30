@@ -1,12 +1,14 @@
 package amon.taser.service.impl
 
 import amon.taser.model.User
+import amon.taser.model.AudioTranscription
 import amon.taser.model.ImprovementRequest
 import amon.taser.model.enums.ImprovementRequestStatusEnum
 import amon.taser.repository.TranscriptionRepository
 import amon.taser.repository.ImprovementRequestRepository
 import amon.taser.service.ImprovementRequestService
 import amon.taser.service.OrderService
+import amon.taser.service.TranscriptionService
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
@@ -15,7 +17,8 @@ import java.util.*
 class ImprovementRequestServiceImpl(
         val improvementRequestRepository: ImprovementRequestRepository,
         val orderService: OrderService,
-        val transcriptionRepository: TranscriptionRepository
+        val transcriptionService: TranscriptionService,
+        val transcriptionRepository: TranscriptionRepository,
 ): ImprovementRequestService {
 
     override fun requestImprovement(employer: User, transcriptionId: UUID): Map<String, Any>? {
@@ -67,5 +70,15 @@ class ImprovementRequestServiceImpl(
         }
 
         return null;
+    }
+
+    override fun getImprovementRequestFromTranscriptionIdAndEmployer(transcriptionId: UUID, employer: User): ImprovementRequest? {
+        val transcription = transcriptionRepository.findByIdAndUser(transcriptionId, employer).get()
+        
+        if (transcription == null) {
+            return null;
+        }
+
+        return improvementRequestRepository.findByTranscription(transcription)
     }
 }
