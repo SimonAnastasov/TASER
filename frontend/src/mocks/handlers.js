@@ -5,7 +5,6 @@ const baseUrl = 'http://localhost:8080/api'
 export const handlers = [
     rest.post(baseUrl + '/login', (req, res, ctx) => {
         const { username, password } = req.body
-        console.log('username: ', username)
         if (username == 'testuser' && password == 'testuser') {
             return res(
                 ctx.status(200),
