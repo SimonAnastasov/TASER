@@ -7,7 +7,7 @@ import java.util.UUID
 @Entity
 data class ImprovementResponse(
         @ManyToOne val transcription: AudioTranscription,
-        @ManyToOne val employer: User,
+        @ManyToOne val employee: User,
 
         val oldTranscriptionText: String,
         val newTranscriptionText: String,

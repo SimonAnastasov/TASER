@@ -37,13 +37,13 @@ const GetPaidPage = () => {
             headers["Authorization"] = `${bearerToken}`;
         }
 
-        axios.get(`${serverApiUrl}/getPaidHistory`, {
+        axios.get(`${serverApiUrl}/api/improvements/getPaidHistory`, {
             headers: headers
         })
             .then(response => {
                 const data = response?.data;
                 if (!data?.error) {
-                    setGetPaidHistory(data.transcriptionGetPaidHistory);
+                    setGetPaidHistory(data.improvementsHistory);
                     setIsLoading(false);
                 }
                 else {
@@ -97,28 +97,28 @@ const GetPaidPage = () => {
                             <hr className="container px-6 lg:px-0 mx-auto bg-primary/20 h-0.5"/>
 
                             <div className="mt-16 lg:mt-20">
-                                {getPaidHistory.map((transcription, index) => (
+                                {getPaidHistory.map((improvement, index) => (
                                     <div key={index}
-                                         className={`${transcription.status === 'finished' ? 'opacity-20' : 'cursor-pointer'} px-8 py-5 lg:py-3 grid grid-cols-1 lg:grid-cols-9 w-full lg:justify-between gap-4 lg:gap-6 rounded-xl bg-primary/10 border-2 border-white transition-all duration-300 hover:bg-primary hover:text-white hover:shadow-md`}
-                                         onClick={(e) => transcription.status !== 'finished' ? handleImproveTranscriptionClick(e, transcription.id) : null}     
+                                         className={`${improvement.status === 'finished' ? 'opacity-20' : 'cursor-pointer'} px-8 py-5 lg:py-3 grid grid-cols-1 lg:grid-cols-9 w-full lg:justify-between gap-4 lg:gap-6 rounded-xl bg-primary/10 border-2 border-white transition-all duration-300 hover:bg-primary hover:text-white hover:shadow-md`}
+                                         onClick={(e) => improvement.status !== 'finished' ? handleImproveTranscriptionClick(e, improvement.id) : null}     
                                     >
                                         <div className="flex flex-col overflow-hidden lg:col-span-2">
                                             <p className="!leading-5 --small-text">Filename (By):</p>
-                                            <p className="!leading-5 heading--6 flex items-end gap-4">{transcription.filename} (by transcription.employer) <span className={`${transcription.status !== 'finished' ? 'hidden' : 'inline lg:hidden'}`}>→</span></p>
+                                            <p className="!leading-5 heading--6 flex items-end gap-4">{improvement.filename} (by improvement.employer) <span className={`${improvement.status !== 'finished' ? 'hidden' : 'inline lg:hidden'}`}>→</span></p>
                                         </div>
                                         <div className="flex flex-col overflow-hidden lg:col-span-2">
                                             <p className="!leading-5 --small-text">Improvement Completed:</p>
-                                            <p className="!leading-5 heading--6">{transcription.status === 'finished' ? '✅' : '❌'}</p>
+                                            <p className="!leading-5 heading--6">{improvement.status === 'finished' ? '✅' : '❌'}</p>
                                         </div>
                                         <div className="flex flex-col overflow-hidden lg:col-span-2">
                                             <p className="!leading-5 --small-text">Date Created:</p>
-                                            <p className="!leading-5 heading--6">{new Date(transcription.timestampCreated).toLocaleString()}</p>
+                                            <p className="!leading-5 heading--6">{new Date(improvement.timestampCreated).toLocaleString()}</p>
                                         </div>
                                         <div className="flex flex-col overflow-hidden lg:col-span-2">
                                             <p className="!leading-5 --small-text">Date Updated:</p>
-                                            <p className="!leading-5 heading--6">{new Date(transcription.timestampUpdated).toLocaleString()}</p>
+                                            <p className="!leading-5 heading--6">{new Date(improvement.timestampUpdated).toLocaleString()}</p>
                                         </div>
-                                        {transcription.status !== 'finished' && (
+                                        {improvement.status !== 'finished' && (
                                             <div className="hidden lg:flex flex-col overflow-hidden justify-center items-end">
                                                 <p className="heading--3">Improve →</p>
                                             </div>
