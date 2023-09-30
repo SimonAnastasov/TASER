@@ -6,7 +6,7 @@ import SegmentBySegmentAnalysisResults from './SegmentBySegmentAnalysisResults'
 import ToggleShownAnalysis from './ToggleShownAnalysis'
 
 import InfoButton from '../utils/InfoButton'
-import { INFO_IMPROVE_THIS_ANALYSIS, INFO_RESULTS_PAGE } from '../../utils/infoTexts'
+import { INFO_ANALYSIS_IS_BEING_IMPROVED, INFO_IMPROVE_THIS_ANALYSIS, INFO_RESULTS_PAGE } from '../../utils/infoTexts'
 import { useNavigate } from 'react-router-dom'
 import { setAnalysisReview } from '../../redux/reducers/analysisResultSlice'
 import { getCookie } from '../../utils/functions/cookies'
@@ -44,13 +44,26 @@ const ResultsPage = () => {
                         <p className="heading--6 text-center">{analysis.filename}</p>
                     </div>
 
-                    <div className="mb-16 w-fit mx-auto flex items-center gap-4">
-                        <div className="hidden">
-                            <InfoButton infoText={INFO_IMPROVE_THIS_ANALYSIS.replace(/\[\[\[PRICE\]\]\]/g, priceForImproving)}/>
+                    {account?.loggedIn && (
+                        <div className="mb-16 w-fit mx-auto flex items-center gap-4">
+                            {!analysis?.improvmentInfo?.isBeingEdited ? (
+                                <>
+                                    <button className="--button button--success">Improve Your Analysis</button>
+                                    <InfoButton infoText={INFO_IMPROVE_THIS_ANALYSIS.replace(/\[\[\[PRICE\]\]\]/g, analysis?.improvementInfo?.cost ?? '-')}/>
+                                </>
+                            ) : (
+                                <div className="text-center">
+                                    <p className="mb-2">Your analysis is currently being improved.</p>
+                                    <div className="flex items-center gap-4">
+                                        <button className="--button-small button--error">Finish Improvements Now</button>
+                                        <InfoButton infoText={INFO_ANALYSIS_IS_BEING_IMPROVED
+                                                                .replace(/\[\[\[IMPROVED_BY\]\]\]/g, analysis?.improvmentInfo?.improvedBy ?? '-')
+                                                                .replace(/\[\[\[DEADLINE\]\]\]/g, analysis?.improvmentInfo?.deadline?.toLocaleString() ?? '-')}/>
+                                    </div>
+                                </div>
+                            )}
                         </div>
-                        <button className="--button button--success">Improve This Analysis</button>
-                        <InfoButton infoText={INFO_IMPROVE_THIS_ANALYSIS.replace(/\[\[\[PRICE\]\]\]/g, priceForImproving)}/>
-                    </div>
+                    )}
 
                     <div className="mb-8 lg:mb-16 w-fit mx-auto text-sm lg:text-lg">
                         <ToggleShownAnalysis/>

@@ -53,8 +53,16 @@ class ImprovementResponseController(
         }
 
         val improvementResponsesHistory = improvementResponseService.getImprovementsHistoryForEmployee(user)
-        return ResponseEntity.ok(mapOf(
-            "improvementsHistory" to improvementResponsesHistory
-        ))
+
+        return if (improvementResponsesHistory != null) { 
+            ResponseEntity.ok(mapOf(
+                "improvementsHistory" to improvementResponsesHistory
+            ))
+        } else {
+            ResponseEntity.ok(mapOf(
+                "error" to true,
+                "message" to "History or active analyses for improving not found."
+            ))
+        }
     }
 }

@@ -37,11 +37,12 @@ const GetPaidPage = () => {
             headers["Authorization"] = `${bearerToken}`;
         }
 
-        axios.get(`${serverApiUrl}/api/improvements/getPaidHistory`, {
+        axios.get(`${serverApiUrl}/improvements/getPaidHistory`, {
             headers: headers
         })
             .then(response => {
                 const data = response?.data;
+
                 if (!data?.error) {
                     setGetPaidHistory(data.improvementsHistory);
                     setIsLoading(false);
@@ -84,16 +85,16 @@ const GetPaidPage = () => {
                     </div>
             ) : (
                 <>
+                    <div className="mb-16 lg:mb-20 w-fit mx-auto flex items-center gap-4">
+                        <div className="hidden">
+                            <InfoButton infoText={INFO_GET_PAID_PAGE}/>
+                        </div>
+                        <button className="--button button--success">Request Analysis For Improving</button>
+                        <InfoButton infoText={INFO_GET_PAID_PAGE}/>
+                    </div>
+                    
                     {getPaidHistory.length > 0 ? (
                         <>
-                            <div className="mb-16 lg:mb-20 w-fit mx-auto flex items-center gap-4">
-                                <div className="hidden">
-                                    <InfoButton infoText={INFO_GET_PAID_PAGE}/>
-                                </div>
-                                <button className="--button button--success">Request Analysis For Improving</button>
-                                <InfoButton infoText={INFO_GET_PAID_PAGE}/>
-                            </div>
-
                             <hr className="container px-6 lg:px-0 mx-auto bg-primary/20 h-0.5"/>
 
                             <div className="mt-16 lg:mt-20">

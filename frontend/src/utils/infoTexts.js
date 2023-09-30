@@ -36,13 +36,25 @@ export const INFO_RESULTS_PAGE = `
 
 // Payments
 export const INFO_IMPROVE_THIS_ANALYSIS = `
-    You can improve this analysis by giving it to other human users to manually analyse and improve it for you. <br/><br/>
+    You can improve your analysis by giving it to other human users to manually analyse and improve it for you. <br/><br/>
 
     We'll find the people automatically for you, so you don't have to worry about that. <br/><br/>
 
     <hr/> <br/>
 
     This particular analysis will cost you approximately $[[[PRICE]]] to improve.
+`
+
+export const INFO_ANALYSIS_IS_BEING_IMPROVED = `
+    This analysis is currently being improved by other users. <br/><br/>
+
+    So far, improvements have been made by [[[IMPROVED_BY]]]/3 people. <br/><br/>
+
+    It will be finished no later than [[[DEADLINE]]]. <br/><br/>
+
+    <hr/> <br/>
+
+    You can finish improving it now by pressing the red button. (Note: there will be no refund nor partial refund for doing this) <br/><br/>
 `
 
 export const INFO_GET_PAID_PAGE = `
