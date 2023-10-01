@@ -45,6 +45,10 @@ const HistoryPage = () => {
                 if (!data?.error) {
                     setHistory(data.transcriptionHistory);
                     setIsLoading(false);
+
+                    if (data.transcriptionHistory.length === 0) {
+                        setNoHistoryMessage({isError: false, message: "You have no history of past analyses."});
+                    }
                 }
                 else {
                     if (data.notLoggedIn) {

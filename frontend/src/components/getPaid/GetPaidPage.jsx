@@ -46,6 +46,10 @@ const GetPaidPage = () => {
                 if (!data?.error) {
                     setGetPaidHistory(data.improvementsHistory);
                     setIsLoading(false);
+
+                    if (data.improvementsHistory.length === 0) {
+                        setNoGetPaidHistoryMessage({isError: false, message: "You have no history or active analyses for improving."});
+                    }
                 }
                 else {
                     if (data.notLoggedIn) {
@@ -85,13 +89,15 @@ const GetPaidPage = () => {
                     </div>
             ) : (
                 <>
-                    <div className="mb-16 lg:mb-20 w-fit mx-auto flex items-center gap-4">
-                        <div className="hidden">
+                    {account?.loggedIn && (
+                        <div className="mb-16 lg:mb-20 w-fit mx-auto flex items-center gap-4">
+                            <div className="hidden">
+                                <InfoButton infoText={INFO_GET_PAID_PAGE}/>
+                            </div>
+                            <button className="--button button--success">Request Analysis For Improving</button>
                             <InfoButton infoText={INFO_GET_PAID_PAGE}/>
                         </div>
-                        <button className="--button button--success">Request Analysis For Improving</button>
-                        <InfoButton infoText={INFO_GET_PAID_PAGE}/>
-                    </div>
+                    )}
                     
                     {getPaidHistory.length > 0 ? (
                         <>
