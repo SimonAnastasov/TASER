@@ -65,4 +65,41 @@ class ImprovementResponseController(
             ))
         }
     }
+
+    @GetMapping("/api/improvements/requestAnalysisForImproving")
+    fun requestAnalysisForImproving(
+        @RequestHeader("Authorization", required = false) authorizationHeader: String?
+    ): ResponseEntity<Any> {
+
+        val user: User? = filter.getUserFromAuthorizationHeader(authorizationHeader)
+
+        if (user == null) {
+            return ResponseEntity.ok(mapOf(
+                "error" to true,
+                "notLoggedIn" to true
+            ))
+        }
+
+        val requestAnalysisForImproving = improvementRequestService.createImprovementResponseForEmployeeNot(user)
+
+        if (requestAnalysisForImproving?.get("error") as? Boolean == true) {
+            return ResponseEntity.ok(mapOf(
+                "error" to true,
+                "message" to requestAnalysisForImproving?.get("message")
+            ))
+        }
+
+        val improvementResponsesHistory = improvementResponseService.getImprovementsHistoryForEmployee(user)
+
+        return if (improvementResponsesHistory != null) { 
+            ResponseEntity.ok(mapOf(
+                "improvementsHistory" to improvementResponsesHistory
+            ))
+        } else {
+            ResponseEntity.ok(mapOf(
+                "error" to true,
+                "message" to "Could not request an analysis for improving at this time. Please try again later."
+            ))
+        }
+    }
 }

@@ -7,11 +7,11 @@ import java.util.UUID
 
 @Entity
 class AudioTranscription(
-    @Column(length = 65535) val text: String,
+    @Column(length = 65535) var text: String,
 
     val filename: String,
     
-    val isCompleted: Boolean = false,
+    var isCompleted: Boolean = false,
 
     @JsonIgnore
     @ManyToOne val user: User?,
@@ -22,7 +22,7 @@ class AudioTranscription(
     val timestampCreated: Instant = Instant.now(),
 
     @Column(name = "timestamp_updated")
-    val timestampUpdated: Instant = Instant.now()
+    var timestampUpdated: Instant = Instant.now()
 ) {
     fun copy(
             text: String = this.text,

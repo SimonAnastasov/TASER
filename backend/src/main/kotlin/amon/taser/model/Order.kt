@@ -11,7 +11,7 @@ data class Order(
         @ManyToOne val user: User,
 
         val amountInDollars: Float,
-        val status: String,
+        var status: String,
 
         @Id @GeneratedValue(strategy = GenerationType.UUID) val id: UUID? = null,
         
@@ -19,5 +19,5 @@ data class Order(
         val timestampCreated: Instant = Instant.now(),
 
         @Column(name = "timestamp_updated")
-        val timestampUpdated: Instant = Instant.now()
+        var timestampUpdated: Instant = Instant.now()
 )

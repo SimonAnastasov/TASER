@@ -9,4 +9,5 @@ import java.util.UUID
 interface ImprovementRequestService {
     fun requestImprovement(employer: User, transcriptionId: UUID): Map<String, Any>?
     fun getImprovementRequestFromTranscriptionIdAndEmployer(transcriptionId: UUID, employer: User): ImprovementRequest?
+    fun createImprovementResponseForEmployeeNot(employee: User): Map<String, Any>?
 }

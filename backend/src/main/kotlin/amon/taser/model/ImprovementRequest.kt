@@ -11,12 +11,12 @@ data class ImprovementRequest(
         @ManyToOne val employer: User,
 
         @Column(length = 65535) val oldTranscriptionText: String,
-        @Column(length = 65535) val newTranscriptionText: String,
+        @Column(length = 65535) var newTranscriptionText: String,
 
         @Enumerated(EnumType.STRING)
-        val status: ImprovementRequestStatusEnum,
+        var status: ImprovementRequestStatusEnum,
 
-        val improvedByCount: Int = 0,
+        var improvedByCount: Int = 0,
 
         @Id @GeneratedValue(strategy = GenerationType.UUID) val id: UUID? = null,
         
@@ -24,5 +24,5 @@ data class ImprovementRequest(
         val timestampCreated: Instant = Instant.now(),
 
         @Column(name = "timestamp_updated")
-        val timestampUpdated: Instant = Instant.now()
+        var timestampUpdated: Instant = Instant.now()
 )
