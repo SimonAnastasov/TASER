@@ -8,6 +8,8 @@ import { getCookie } from '../../utils/functions/cookies';
 
 import axios from 'axios';
 import { serverApiUrl } from '../../utils/envVariables';
+import { setTextError } from '../../redux/reducers/errorsSlice';
+import { setTextSuccess } from '../../redux/reducers/successesSlice';
 
 const GetPaidPage = () => {
     const dispatch = useDispatch();
@@ -41,11 +43,12 @@ const GetPaidPage = () => {
             headers: headers
         })
             .then(response => {
+                setIsLoading(false);
+
                 const data = response?.data;
 
                 if (!data?.error) {
                     setGetPaidHistory(data.improvementsHistory);
-                    setIsLoading(false);
 
                     if (data.improvementsHistory.length === 0) {
                         setNoGetPaidHistoryMessage({isError: false, message: "You have no history or active analyses for improving."});
@@ -58,12 +61,10 @@ const GetPaidPage = () => {
                             dispatch(setAccount({ username: "" }));
                         }
                         
-                        setIsLoading(false);
                         setGetPaidHistory([]);
                         setNoGetPaidHistoryMessage({isError: true, message: "You are not logged in. Please log in to view your history or active analyses for improving."});
                     }
                     else {
-                        setIsLoading(false);
                         setGetPaidHistory([]);
                         setNoGetPaidHistoryMessage({isError: true, message: data.message});
                     }
@@ -94,7 +95,7 @@ const GetPaidPage = () => {
                             <div className="hidden">
                                 <InfoButton infoText={INFO_GET_PAID_PAGE}/>
                             </div>
-                            <button className="--button button--success">Request Analysis For Improving</button>
+                            <button className="--button button--success" onClick={handleRequestAnalysisForImprovingClick}>Request Analysis For Improving</button>
                             <InfoButton infoText={INFO_GET_PAID_PAGE}/>
                         </div>
                     )}
@@ -107,7 +108,7 @@ const GetPaidPage = () => {
                                 {getPaidHistory.map((improvement, index) => (
                                     <div key={index}
                                          className={`${improvement.status === 'finished' ? 'opacity-20' : 'cursor-pointer'} px-8 py-5 lg:py-3 grid grid-cols-1 lg:grid-cols-9 w-full lg:justify-between gap-4 lg:gap-6 rounded-xl bg-primary/10 border-2 border-white transition-all duration-300 hover:bg-primary hover:text-white hover:shadow-md`}
-                                         onClick={(e) => improvement.status !== 'finished' ? handleImproveTranscriptionClick(e, improvement.id) : null}     
+                                         onClick={(e) => improvement.status !== 'finished' ? handleImproveTranscriptionClick(e, improvement.id) : null}
                                     >
                                         <div className="flex flex-col overflow-hidden lg:col-span-2">
                                             <p className="!leading-5 --small-text">Filename (By):</p>
@@ -149,6 +150,50 @@ const GetPaidPage = () => {
 
     function handleGoBackHome(e) {
         navigate("/");
+    }
+
+    function handleRequestAnalysisForImprovingClick(e) {
+        setIsLoading(true);
+
+        let headers = {}
+            
+        let bearerToken = getCookie("bearerToken");
+        if (typeof bearerToken === "string" && bearerToken.length > 0) {
+            headers["Authorization"] = `${bearerToken}`;
+        }
+
+        axios.get(`${serverApiUrl}/improvements/requestAnalysisForImproving`, {
+            headers: headers
+        })
+            .then(response => {
+                setIsLoading(false);
+
+                const data = response?.data;
+
+                if (!data?.error) {
+                    setGetPaidHistory(data.improvementsHistory);
+
+                    dispatch(setTextSuccess("Successfully requested a new analysis for improving."));
+                }
+                else {
+                    if (data.notLoggedIn) {
+                        if (account.loggedIn) {
+                            dispatch(setLoggedIn(false));
+                            dispatch(setAccount({ username: "" }));
+
+                            dispatch(setTextError("You are not logged in. Please log in to request analysis for improving."));
+                        }
+                    }
+                    else {
+                        setGetPaidHistory([]);
+                        dispatch(setTextError(data.message));
+                    }
+                }
+            })
+            .catch(error => {
+                setIsLoading(false);
+                dispatch(setTextError("Unknown error. Please try again later."));
+            })
     }
 
     function handleImproveTranscriptionClick(e, transcriptionId) {
