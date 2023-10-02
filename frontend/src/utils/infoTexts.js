@@ -68,7 +68,7 @@ export const INFO_YOU_ARE_CURRENTLY_IMPROVING_THIS_ANALYSIS = `
 
     <hr/><br/>
 
-    If you want to revert the analysis back to the original, click 'Revert To Original'. <br/><br/>
+    If you want to revert the analysis back to the original, click 'Revert To Original'. This will revert all previous changes you've made, even those from previous days. <br/><br/>
 
     <hr/><br/>
 

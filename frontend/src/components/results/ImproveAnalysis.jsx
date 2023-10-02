@@ -10,6 +10,7 @@ import { setAnalysisImprovementInfo } from '../../redux/reducers/analysisResultS
 import { serverApiUrl } from '../../utils/envVariables';
 import { getCookie } from '../../utils/functions/cookies';
 import { setTextError } from '../../redux/reducers/errorsSlice';
+import { setTextSuccess } from '../../redux/reducers/successesSlice';
 
 const ImproveAnalysis = () => {
     const dispatch = useDispatch();
@@ -33,9 +34,9 @@ const ImproveAnalysis = () => {
                                     <div className="text-center">
                                         <p className="mb-2">You are currently improving this analysis.</p>
                                         <div className="flex flex-col lg:flex-row lg:items-center gap-4">
-                                            <button className="--button-small button--success" onClick={(e) => handleEmployeeSyncChanges(e, analysis.id)}>Sync Changes</button>
+                                            <button className="--button-small button--success" onClick={(e) => handleEmployeeSyncChanges(e, employeeInfo?.improvemenResponsetId)}>Sync Changes</button>
                                             <button className="--button-small button--error" onClick={(e) => handleEmployeeRevertToOriginal(e)}>Revert To Original</button>
-                                            <button className="--button-small button--success" onClick={(e) => handleEmployeeFinishImproving(e, analysis.id)}>Finish Improving</button>
+                                            <button className="--button-small button--success" onClick={(e) => handleEmployeeFinishImproving(e, employeeInfo?.improvemenResponsetId)}>Finish Improving</button>
                                             <div className="flex-shrink-0 w-fit mx-auto">
                                                 <InfoButton infoText={INFO_YOU_ARE_CURRENTLY_IMPROVING_THIS_ANALYSIS}/>
                                             </div>
@@ -46,7 +47,7 @@ const ImproveAnalysis = () => {
                                 <>
                                     {!improvementInfo?.isRequested ? (
                                         <>
-                                            <button className="--button button--success" onClick={(e) => handleImproveRequest(e, analysis.id)}>Improve Your Analysis</button>
+                                            <button className="--button button--success" onClick={(e) => handleImproveRequest(e, employeeInfo?.improvemenResponsetId)}>Improve Your Analysis</button>
                                             <InfoButton infoText={INFO_IMPROVE_THIS_ANALYSIS.replace(/\[\[\[PRICE\]\]\]/g, improvementInfo?.cost ?? '-')}/>
                                         </>
                                     ) : (
@@ -134,8 +135,58 @@ const ImproveAnalysis = () => {
         
     }
 
-    function handleEmployeeSyncChanges(e, id) {
-        
+    function handleEmployeeSyncChanges(e, improvementResponseId) {
+        let transcriptionTextGlobalInput = document.getElementById("transcriptionTextGlobal");
+
+        if (!transcriptionTextGlobalInput) {
+            dispatch(setTextError("Unknown error. Please try again later."));
+            return ;
+        }
+
+        setIsLoading(true);
+
+        let headers = {}
+            
+        let bearerToken = getCookie("bearerToken");
+        if (typeof bearerToken === "string" && bearerToken.length > 0) {
+            headers["Authorization"] = `${bearerToken}`;
+        }
+
+        const newAnalysis = JSON.parse(analysis?.text);
+        newAnalysis["Global_text"] = transcriptionTextGlobalInput.value;
+
+        axios.post(`${serverApiUrl}/improvements/syncImprovementResponse/${improvementResponseId}`, {
+            newTranscriptionText: JSON.stringify(newAnalysis)
+        }, {
+            headers: headers
+        })
+            .then(response => {
+                setIsLoading(false);
+
+                const data = response?.data;
+
+                if (!data?.error) {
+                    dispatch(setTextSuccess("Changes synced successfully."));
+                }
+                else {
+                    if (data.notLoggedIn) {
+                        if (account.loggedIn) {
+                            dispatch(setLoggedIn(false));
+                            dispatch(setAccount({ username: "" }));
+
+                            dispatch(setTextError("Please log in to sync changes."));                             
+                        }
+                    }
+                    else {
+                        dispatch(setTextError(data.message));
+                    }
+                }
+            })
+            .catch(error => {
+                setIsLoading(false);
+
+                dispatch(setTextError("Unknown error. Please try again later."));
+            });
     }
 
     function handleEmployeeFinishImproving(e, id) {

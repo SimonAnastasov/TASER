@@ -198,7 +198,7 @@ const GetPaidPage = () => {
             })
     }
 
-    function handleImproveTranscriptionClick(e, improvementId) {
+    function handleImproveTranscriptionClick(e, improvementResponseId) {
         setIsLoading(true);
 
         let headers = {}
@@ -208,7 +208,7 @@ const GetPaidPage = () => {
             headers["Authorization"] = `${bearerToken}`;
         }
 
-        axios.get(`${serverApiUrl}/improvements/enterIsImprovingMode/${improvementId}`, {
+        axios.get(`${serverApiUrl}/improvements/enterIsImprovingMode/${improvementResponseId}`, {
             headers: headers
         })
             .then(response => {
@@ -220,9 +220,10 @@ const GetPaidPage = () => {
                     dispatch(setAnalysisResult(data?.improvementResponse?.improvementRequest?.transcription));
 
                     dispatch(setAnalysisEmployeeInfo({
+                        improvemenResponsetId: data?.improvementResponse?.id,
+                        isImproving: true,
                         originalText: data?.improvementResponse?.oldTranscriptionText,
                         employer: data?.improvementResponse?.improvementRequest?.employer?.username,
-                        isImproving: true
                     }))
 
                     navigate("/analysis");
