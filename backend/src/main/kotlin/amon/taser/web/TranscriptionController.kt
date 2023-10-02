@@ -79,11 +79,11 @@ class TranscriptionController(
             val improvementRequest = improvementRequestService.getImprovementRequestFromTranscription(transcription)
             if (improvementRequest != null) {
                 if (improvementRequest.status != ImprovementRequestStatusEnum.FINISHED
-                        ||improvementRequest.status != ImprovementRequestStatusEnum.PAID) {
-                    isImprovedArray[i] = true
+                        && improvementRequest.status != ImprovementRequestStatusEnum.PAID) {
+                    isRequestedArray[i] = true
                 }
                 else {
-                    isRequestedArray[i] = true
+                    isImprovedArray[i] = true
                 }
             }
         }
