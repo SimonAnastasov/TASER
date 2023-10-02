@@ -53,8 +53,7 @@ const ImproveAnalysis = () => {
                                     ) : (
                                         <div className="text-center">
                                             <p className="mb-2">Your analysis is currently being improved.</p>
-                                            <div className="flex items-center gap-4">
-                                                <button className="--button-small button--error" onClick={(e) => handleFinishImprovements(e, improvementInfo?.improvementRequest?.id)}>Finish Improvements Now</button>
+                                            <div className="flex justify-center items-center gap-4">
                                                 <InfoButton infoText={INFO_ANALYSIS_IS_BEING_IMPROVED
                                                                         .replace(/\[\[\[IMPROVED_BY\]\]\]/g, improvementInfo?.improvedBy ?? '-')
                                                                         .replace(/\[\[\[DEADLINE\]\]\]/g, improvementInfo?.deadline?.toLocaleString() ?? '-')}/>
@@ -129,10 +128,6 @@ const ImproveAnalysis = () => {
 
                 dispatch(setTextError("Unknown error. Please try again later."));
             });
-    }
-
-    function handleFinishImprovements(e, transcriptionId) {
-        
     }
 
     function handleEmployeeSyncChanges(e, improvementResponseId) {
