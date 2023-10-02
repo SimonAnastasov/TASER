@@ -7,4 +7,5 @@ import java.util.UUID
 
 interface ImprovementResponseService {
     fun getImprovementsHistoryForEmployee(employee: User): List<ImprovementResponse>
+    fun getImprovementResponseFromId(id: UUID): ImprovementResponse?
 }

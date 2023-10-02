@@ -10,6 +10,7 @@ import axios from 'axios';
 import { serverApiUrl } from '../../utils/envVariables';
 import { setTextError } from '../../redux/reducers/errorsSlice';
 import { setTextSuccess } from '../../redux/reducers/successesSlice';
+import { setAnalysisEmployeeInfo, setAnalysisResult } from '../../redux/reducers/analysisResultSlice';
 
 const GetPaidPage = () => {
     const dispatch = useDispatch();
@@ -195,8 +196,52 @@ const GetPaidPage = () => {
             })
     }
 
-    function handleImproveTranscriptionClick(e, transcriptionId) {
+    function handleImproveTranscriptionClick(e, improvementId) {
+        setIsLoading(true);
 
+        let headers = {}
+            
+        let bearerToken = getCookie("bearerToken");
+        if (typeof bearerToken === "string" && bearerToken.length > 0) {
+            headers["Authorization"] = `${bearerToken}`;
+        }
+
+        axios.get(`${serverApiUrl}/improvements/enterIsImprovingMode/${improvementId}`, {
+            headers: headers
+        })
+            .then(response => {
+                setIsLoading(false);
+
+                const data = response?.data;
+
+                if (!data?.error) {
+                    dispatch(setAnalysisResult(data?.improvementResponse?.improvementRequest?.transcription));
+
+                    dispatch(setAnalysisEmployeeInfo({
+                        employer: data?.improvementResponse?.improvementRequest?.employer?.username,
+                        isImproving: true
+                    }))
+
+                    navigate("/analysis");
+                }
+                else {
+                    if (data.notLoggedIn) {
+                        if (account.loggedIn) {
+                            dispatch(setLoggedIn(false));
+                            dispatch(setAccount({ username: "" }));
+
+                            dispatch(setTextError("You are not logged in. Please log in to improve this analysis."));
+                        }
+                    }
+                    else {
+                        dispatch(setTextError(data.message));
+                    }
+                }
+            })
+            .catch(error => {
+                setIsLoading(false);
+                dispatch(setTextError("Unknown error. Please try again later."));
+            })
     }
 }
 

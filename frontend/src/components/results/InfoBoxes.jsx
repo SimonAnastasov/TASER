@@ -1,6 +1,9 @@
 import React from 'react'
+import { useSelector } from 'react-redux';
 
-const InfoBoxes = ({ entities_list, global_texts }) => {
+const InfoBoxes = ({ entities_list, global_texts, is_global_analysis }) => {
+    const employeeInfo = useSelector(state => state?.analysisResult?.employeeInfo);
+
     return (
         <div className="lg:px-6 mx-auto mt-8 grid grid-cols-1 lg:grid-cols-3 gap-y-8 lg:gap-8">
             {/* Container on the left side of the global analysis dashboard */}
@@ -60,7 +63,11 @@ const InfoBoxes = ({ entities_list, global_texts }) => {
                                     ))}
                                 </div>
                                 {/* Add the content */}
-                                <div className="py-2 pl-2 pr-8 text-justify">{text.content}</div>
+                                {employeeInfo?.isImproving && text.title === "Transcription Text" && is_global_analysis ? (
+                                    <textarea id="transcriptionTextGlobal" className="py-2 pl-2 pr-8 text-justify text-black w-full" defaultValue={text.content}></textarea>
+                                ) : (
+                                    <div className="py-2 pl-2 pr-8 text-justify">{text.content}</div>
+                                )}
                             </div>
                         </div>
                         {/* End content container */}

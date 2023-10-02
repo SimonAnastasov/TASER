@@ -119,7 +119,7 @@ class ImprovementRequestServiceImpl(
         val improvementResponse = ImprovementResponse(
             improvementRequest = improvementRequest,
             employee = employee,
-            oldTranscriptionText = improvementRequest.oldTranscriptionText,
+            oldTranscriptionText = improvementRequest.newTranscriptionText,
             newTranscriptionText = improvementRequest.newTranscriptionText,
             status = ImprovementResponseStatusEnum.IN_PROGRESS
         )

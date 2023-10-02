@@ -17,6 +17,8 @@ const ResultsPage = () => {
     const analysis = useSelector(state => state?.analysisResult?.result);
     const analysisResult = analysis?.id ? JSON.parse(analysis?.text) : null;
 
+    const employeeInfo = useSelector(state => state?.analysisResult?.employeeInfo);
+
     const shownAnalysis = useSelector(state => state?.shownAnalysis?.shownAnalysis);
 
     return (
@@ -24,8 +26,8 @@ const ResultsPage = () => {
             {analysisResult && Object.keys(analysisResult).length > 0 ? (
                 <>
                     <div className="mb-6">
-                        <p className="--small-text text-center">Filename:</p>
-                        <p className="heading--6 text-center">{analysis.filename}</p>
+                        <p className="--small-text text-center">Filename{employeeInfo?.employer ? ` (By):` : ``}</p>
+                        <p className="heading--6 text-center">{analysis.filename}{employeeInfo?.employer ? ` (by ${employeeInfo?.employer})` : ``}</p>
                     </div>
 
                     <ImproveAnalysis/>

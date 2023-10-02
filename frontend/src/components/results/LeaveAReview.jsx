@@ -17,8 +17,13 @@ const LeaveAReview = () => {
     const analysis = useSelector(state => state?.analysisResult?.result);
 
     const analysisReview = useSelector(state => state?.analysisResult?.review);
+    const employeeInfo = useSelector(state => state?.analysisResult?.employeeInfo);
 
     const account = useSelector(state => state?.account)
+
+    if (employeeInfo?.isImproving) {
+        return ;
+    }
 
     return (
         <>

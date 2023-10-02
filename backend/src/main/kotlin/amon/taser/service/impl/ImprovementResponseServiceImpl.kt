@@ -18,4 +18,8 @@ class ImprovementResponseServiceImpl(
     override fun getImprovementsHistoryForEmployee(employee: User): List<ImprovementResponse> {
         return improvementResponseRepository.findAllByEmployeeOrderByTimestampUpdatedDesc(employee)
     }
+
+    override fun getImprovementResponseFromId(id: UUID): ImprovementResponse? {
+        return improvementResponseRepository.findById(id).get()
+    }
 }

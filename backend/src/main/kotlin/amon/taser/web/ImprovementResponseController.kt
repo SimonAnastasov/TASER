@@ -102,4 +102,40 @@ class ImprovementResponseController(
             ))
         }
     }
+
+    @GetMapping("/api/improvements/enterIsImprovingMode/{improvementId}")
+    fun enterIsImprovingMode(
+        @PathVariable improvementId: UUID,
+        @RequestHeader("Authorization", required = false) authorizationHeader: String?,
+    ): ResponseEntity<Any> {
+        val user: User? = filter.getUserFromAuthorizationHeader(authorizationHeader)
+
+        if (user == null) {
+            return ResponseEntity.ok(mapOf(
+                "error" to true,
+                "notLoggedIn" to true
+            ))
+        }
+
+        var improvementResponse = improvementResponseService.getImprovementResponseFromId(improvementId)
+
+        if (improvementResponse == null) {
+            return ResponseEntity.ok(mapOf(
+                "error" to true,
+                "message" to "Could not find analysis for improvement."
+            ))
+        }
+        else if (improvementResponse.employee != user) {
+            return ResponseEntity.ok(mapOf(
+                "error" to true,
+                "message" to "This analysis for improvement is not yours."
+            ))
+        }
+
+        improvementResponse.improvementRequest.transcription.text = improvementResponse.newTranscriptionText
+
+        return ResponseEntity.ok(mapOf(
+            "improvementResponse" to improvementResponse
+        ))
+    }
 }
