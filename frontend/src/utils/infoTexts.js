@@ -68,5 +68,9 @@ export const INFO_YOU_ARE_CURRENTLY_IMPROVING_THIS_ANALYSIS = `
 
     <hr/><br/>
 
+    If you want to revert the analysis back to the original, click 'Revert To Original'. <br/><br/>
+
+    <hr/><br/>
+
     When you are completely finished with improving this analysis, click 'Finish Improving'
 `

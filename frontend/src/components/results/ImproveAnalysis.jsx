@@ -32,10 +32,13 @@ const ImproveAnalysis = () => {
                                 <>
                                     <div className="text-center">
                                         <p className="mb-2">You are currently improving this analysis.</p>
-                                        <div className="flex items-center gap-4">
+                                        <div className="flex flex-col lg:flex-row lg:items-center gap-4">
                                             <button className="--button-small button--success" onClick={(e) => handleEmployeeSyncChanges(e, analysis.id)}>Sync Changes</button>
+                                            <button className="--button-small button--error" onClick={(e) => handleEmployeeRevertToOriginal(e)}>Revert To Original</button>
                                             <button className="--button-small button--success" onClick={(e) => handleEmployeeFinishImproving(e, analysis.id)}>Finish Improving</button>
-                                            <InfoButton infoText={INFO_YOU_ARE_CURRENTLY_IMPROVING_THIS_ANALYSIS}/>
+                                            <div className="flex-shrink-0 w-fit mx-auto">
+                                                <InfoButton infoText={INFO_YOU_ARE_CURRENTLY_IMPROVING_THIS_ANALYSIS}/>
+                                            </div>
                                         </div>
                                     </div>
                                 </>
@@ -137,6 +140,14 @@ const ImproveAnalysis = () => {
 
     function handleEmployeeFinishImproving(e, id) {
 
+    }
+
+    function handleEmployeeRevertToOriginal(e) {
+        let transcriptionTextGlobalInput = document.getElementById("transcriptionTextGlobal");
+
+        if (transcriptionTextGlobalInput && employeeInfo?.originalText) {
+            transcriptionTextGlobalInput.value = JSON.parse(employeeInfo?.originalText)["Global_text"];
+        }
     }
 }
 

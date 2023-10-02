@@ -218,6 +218,7 @@ const GetPaidPage = () => {
                     dispatch(setAnalysisResult(data?.improvementResponse?.improvementRequest?.transcription));
 
                     dispatch(setAnalysisEmployeeInfo({
+                        originalText: data?.improvementResponse?.oldTranscriptionText,
                         employer: data?.improvementResponse?.improvementRequest?.employer?.username,
                         isImproving: true
                     }))
