@@ -11,4 +11,5 @@ import java.util.UUID
 interface ImprovementResponseRepository : JpaRepository<ImprovementResponse, UUID> {
     fun findAllByEmployeeOrderByTimestampUpdatedDesc(employee: User): List<ImprovementResponse>
     fun findByImprovementRequest(improvementRequest: ImprovementRequest): ImprovementResponse?
+    fun findAllByImprovementRequest(improvementRequest: ImprovementRequest): List<ImprovementResponse>?
 }
