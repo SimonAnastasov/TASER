@@ -107,6 +107,11 @@
             <version>5.3.3</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>23.7.0</version>
+        </dependency>
     </dependencies>
 
     <build>

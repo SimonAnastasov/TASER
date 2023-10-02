@@ -89,7 +89,7 @@ class ImprovementResponseController(
         if (requestAnalysisForImproving?.get("error") as? Boolean == true) {
             return ResponseEntity.ok(mapOf(
                 "error" to true,
-                "message" to requestAnalysisForImproving?.get("message")
+                "message" to requestAnalysisForImproving["message"]
             ))
         }
 
