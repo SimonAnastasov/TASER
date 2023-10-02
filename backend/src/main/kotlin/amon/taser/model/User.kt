@@ -10,7 +10,10 @@ data class User(
         val username: String,
         val password: String,
         val email: String,
-        @Id @GeneratedValue(strategy = GenerationType.UUID) val id: UUID? = null,
+        val connectedAccountId: String? = null,
+
+        @Id @GeneratedValue(strategy = GenerationType.UUID)
+        val id: UUID? = null,
         
         @Column(name = "timestamp_created")
         val timestampCreated: Instant = Instant.now(),

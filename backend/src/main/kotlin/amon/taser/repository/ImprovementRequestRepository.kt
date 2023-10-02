@@ -12,4 +12,5 @@ import java.util.UUID
 interface ImprovementRequestRepository : JpaRepository<ImprovementRequest, UUID> {
     fun findByTranscription(transcription: AudioTranscription): ImprovementRequest?
     fun findAllByEmployerNotAndStatus(employer: User, status: ImprovementRequestStatusEnum): List<ImprovementRequest>?
+    fun findAllByStatus(status: ImprovementRequestStatusEnum): List<ImprovementRequest>?
 }
