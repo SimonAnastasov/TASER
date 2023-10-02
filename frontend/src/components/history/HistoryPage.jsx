@@ -7,7 +7,7 @@ import { serverApiUrl } from '../../utils/envVariables'
 
 import { getCookie } from '../../utils/functions/cookies';
 import { setAccount, setLoggedIn } from '../../redux/reducers/accountSlice';
-import { setAnalysisImprovementInfo, setAnalysisResult, setAnalysisReview } from '../../redux/reducers/analysisResultSlice';
+import { setAnalysisEmployeeInfo, setAnalysisImprovementInfo, setAnalysisResult, setAnalysisReview } from '../../redux/reducers/analysisResultSlice';
 
 const HistoryPage = () => {
     const dispatch = useDispatch();
@@ -43,12 +43,11 @@ const HistoryPage = () => {
             .then(response => {
                 const data = response?.data;
                 if (!data?.error) {
-                    console.log(data);
-
                     setHistory(data.transcriptionHistory.map((e, index) => {
                         return {
                             ...e,
-                            isRequested: data?.isRequestedArray?.[index]
+                            isRequested: data?.isRequestedArray?.[index],
+                            isImproved: data?.isImprovedArray?.[index]
                         }
                     }));
                     setIsLoading(false);
@@ -86,7 +85,7 @@ const HistoryPage = () => {
 
     return (
         <div className="px-6 lg:px-0">
-            <div className="bg-primary/10 bg-yellow-500/10 hidden"></div>
+            <div className="bg-primary/10 bg-yellow-500/10 bg-gray-500/10 bg-green-500/10 hidden"></div>
 
             <p className="heading--3 text-center">History - Your Past Analyses</p>
 
@@ -102,7 +101,7 @@ const HistoryPage = () => {
                             <div className="flex flex-col gap-6 lg:px-6">
                                 {history.map((transcription, index) => (
                                     <div key={index}
-                                         className={`${transcription.isRequested ? 'bg-yellow-500/10' : 'bg-primary/10'} px-8 py-5 lg:py-3 grid grid-cols-1 lg:grid-cols-9 w-full lg:justify-between gap-4 lg:gap-6 rounded-xl border-2 border-white cursor-pointer transition-all duration-300 hover:bg-primary hover:text-white hover:shadow-md`}
+                                         className={`${transcription.isRequested ? 'bg-yellow-500/10' : transcription.isImproved ? 'bg-green-500/10' : 'bg-primary/10'} px-8 py-5 lg:py-3 grid grid-cols-1 lg:grid-cols-9 w-full lg:justify-between gap-4 lg:gap-6 rounded-xl border-2 border-white cursor-pointer transition-all duration-300 hover:bg-primary hover:text-white hover:shadow-md`}
                                          onClick={(e) => handleTranscriptionClick(e, transcription.id)}
                                     >
                                         <div className="flex flex-col overflow-hidden lg:col-span-2">
@@ -163,13 +162,15 @@ const HistoryPage = () => {
                 if (!data?.error) {
                     dispatch(setAnalysisResult(data.transcription));
                     dispatch(setAnalysisReview(data.transcriptionReview));
+                    dispatch(setAnalysisEmployeeInfo({}));
 
                     if (data?.transcriptionImprovementInfo) {
                         dispatch(setAnalysisImprovementInfo({
                             cost: ((new TextEncoder().encode(JSON.stringify(data.transcription.text)).length) * 0.0001).toFixed(2),
                             isRequested: true,
                             improvedBy: data?.transcriptionImprovementInfo?.improvedByCount,
-                            deadline: (new Date(new Date(data?.transcriptionImprovementInfo?.timestampCreated).setDate(new Date(data?.transcriptionImprovementInfo?.timestampCreated).getDate() + 7))).toLocaleString()
+                            deadline: (new Date(new Date(data?.transcriptionImprovementInfo?.timestampCreated).setDate(new Date(data?.transcriptionImprovementInfo?.timestampCreated).getDate() + 7))).toLocaleString(),
+                            status: data?.transcriptionImprovementInfo?.status
                         }))
                     }
                     else {

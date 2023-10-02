@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 import axios from 'axios'
 
@@ -14,6 +15,7 @@ import { setTextSuccess } from '../../redux/reducers/successesSlice';
 
 const ImproveAnalysis = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [isLoading, setIsLoading] = useState(false);
 
@@ -47,9 +49,13 @@ const ImproveAnalysis = () => {
                                 <>
                                     {!improvementInfo?.isRequested ? (
                                         <>
-                                            <button className="--button button--success" onClick={(e) => handleImproveRequest(e, employeeInfo?.improvemenResponsetId)}>Improve Your Analysis</button>
+                                            <button className="--button button--success" onClick={(e) => handleImproveRequest(e, analysis.id)}>Improve Your Analysis</button>
                                             <InfoButton infoText={INFO_IMPROVE_THIS_ANALYSIS.replace(/\[\[\[PRICE\]\]\]/g, improvementInfo?.cost ?? '-')}/>
                                         </>
+                                    ) : improvementInfo?.status === "FINISHED" || improvementInfo?.status === "PAID" ? (
+                                        <div className="text-center">
+                                            <p className="mb-2">Your analysis is now improved.</p>
+                                        </div>
                                     ) : (
                                         <div className="text-center">
                                             <p className="mb-2">Your analysis is currently being improved.</p>
@@ -106,7 +112,7 @@ const ImproveAnalysis = () => {
                     dispatch(setAnalysisImprovementInfo({
                         isRequested: true,
                         improvedBy: data?.improvementRequest?.improvedByCount,
-                        deadline: new Date(data?.improvementRequest?.timestampCreated).setDate(new Date(data?.improvementRequest?.timestampCreated).getDate() + 7)
+                        deadline: (new Date(new Date(data?.improvementRequest?.timestampCreated).setDate(new Date(data?.improvementRequest?.timestampCreated).getDate() + 7))).toLocaleString()
                     }));
                 }
                 else {
@@ -184,8 +190,60 @@ const ImproveAnalysis = () => {
             });
     }
 
-    function handleEmployeeFinishImproving(e, id) {
+    function handleEmployeeFinishImproving(e, improvementResponseId) {
+        let transcriptionTextGlobalInput = document.getElementById("transcriptionTextGlobal");
 
+        if (!transcriptionTextGlobalInput) {
+            dispatch(setTextError("Unknown error. Please try again later."));
+            return ;
+        }
+
+        setIsLoading(true);
+
+        let headers = {}
+            
+        let bearerToken = getCookie("bearerToken");
+        if (typeof bearerToken === "string" && bearerToken.length > 0) {
+            headers["Authorization"] = `${bearerToken}`;
+        }
+
+        const newAnalysis = JSON.parse(analysis?.text);
+        newAnalysis["Global_text"] = transcriptionTextGlobalInput.value;
+
+        axios.post(`${serverApiUrl}/improvements/finishImprovementResponse/${improvementResponseId}`, {
+            newTranscriptionText: JSON.stringify(newAnalysis)
+        }, {
+            headers: headers
+        })
+            .then(response => {
+                setIsLoading(false);
+
+                const data = response?.data;
+
+                if (!data?.error) {
+                    dispatch(setTextSuccess("Improvement sent. You can check final improvement status on Get Paid page."));
+
+                    navigate('/get-paid');
+                }
+                else {
+                    if (data.notLoggedIn) {
+                        if (account.loggedIn) {
+                            dispatch(setLoggedIn(false));
+                            dispatch(setAccount({ username: "" }));
+
+                            dispatch(setTextError("Please log in to sync changes."));                             
+                        }
+                    }
+                    else {
+                        dispatch(setTextError(data.message));
+                    }
+                }
+            })
+            .catch(error => {
+                setIsLoading(false);
+
+                dispatch(setTextError("Unknown error. Please try again later."));
+            });
     }
 
     function handleEmployeeRevertToOriginal(e) {

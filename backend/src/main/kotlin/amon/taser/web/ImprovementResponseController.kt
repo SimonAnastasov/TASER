@@ -144,15 +144,11 @@ class ImprovementResponseController(
     }
 
     @PostMapping("/api/improvements/syncImprovementResponse/{improvementResponseId}")
-    fun enterIsImprovingMode(
+    fun syncImprovementResponse(
         @PathVariable improvementResponseId: UUID,
         @RequestBody body: Map<String, String>,
         @RequestHeader("Authorization", required = false) authorizationHeader: String?,
     ): ResponseEntity<Any> {
-        body.forEach { (key, value) ->
-            System.out.println("$key: $value")
-        }
-
         val user: User? = filter.getUserFromAuthorizationHeader(authorizationHeader)
 
         if (user == null) {
@@ -188,6 +184,55 @@ class ImprovementResponseController(
         improvementResponse.timestampUpdated = Instant.now();
 
         improvementResponseRepository.save(improvementResponse);
+
+        return ResponseEntity.ok(mapOf(
+            "success" to true
+        ))
+    }
+
+    @PostMapping("/api/improvements/finishImprovementResponse/{improvementResponseId}")
+    fun finishImprovementResponse(
+        @PathVariable improvementResponseId: UUID,
+        @RequestBody body: Map<String, String>,
+        @RequestHeader("Authorization", required = false) authorizationHeader: String?,
+    ): ResponseEntity<Any> {
+        val user: User? = filter.getUserFromAuthorizationHeader(authorizationHeader)
+
+        if (user == null) {
+            return ResponseEntity.ok(mapOf(
+                "error" to true,
+                "notLoggedIn" to true
+            ))
+        }
+
+        var improvementResponse = improvementResponseService.getImprovementResponseFromId(improvementResponseId)
+
+        if (improvementResponse == null) {
+            return ResponseEntity.ok(mapOf(
+                "error" to true,
+                "message" to "Could not find analysis for improving."
+            ))
+        }
+        else if (improvementResponse.employee != user) {
+            return ResponseEntity.ok(mapOf(
+                "error" to true,
+                "message" to "This analysis for improving is not yours."
+            ))
+        }
+
+        if (body?.get("newTranscriptionText") == null) {
+            return ResponseEntity.ok(mapOf(
+                "error" to true,
+                "message" to "You've sent empty text for this analysis."
+            ))
+        }
+
+        improvementResponse.newTranscriptionText = body?.get("newTranscriptionText") ?: ""
+        improvementResponse.timestampUpdated = Instant.now()
+
+        improvementResponseRepository.save(improvementResponse)
+
+        improvementRequestService.finishImprovementResponse(improvementResponse)
 
         return ResponseEntity.ok(mapOf(
             "success" to true

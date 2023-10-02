@@ -10,16 +10,19 @@ import amon.taser.repository.TranscriptionRepository
 import amon.taser.repository.ImprovementRequestRepository
 import amon.taser.repository.ImprovementResponseRepository
 import amon.taser.service.ImprovementRequestService
+import amon.taser.service.ValidityCheckService
 import amon.taser.service.OrderService
 import amon.taser.service.TranscriptionService
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
+import java.time.Instant
 
 @Service
 class ImprovementRequestServiceImpl(
         val improvementRequestRepository: ImprovementRequestRepository,
         val improvementResponseRepository: ImprovementResponseRepository,
+        val validityCheckService: ValidityCheckService,
         val orderService: OrderService,
         val transcriptionService: TranscriptionService,
         val transcriptionRepository: TranscriptionRepository,
@@ -104,7 +107,7 @@ class ImprovementRequestServiceImpl(
         val sortedImprovementRequests = improvementRequests.sortedByDescending { it.timestampCreated }
 
         for (i in 0 until sortedImprovementRequests.size) {
-            val checkForAlreadyExistingImprovementResponse = improvementResponseRepository.findByImprovementRequest(sortedImprovementRequests[i])
+            val checkForAlreadyExistingImprovementResponse = improvementResponseRepository.findByImprovementRequestAndEmployee(sortedImprovementRequests[i], employee)
 
             if (checkForAlreadyExistingImprovementResponse == null) {
                 improvementRequest = sortedImprovementRequests[i]
@@ -137,6 +140,43 @@ class ImprovementRequestServiceImpl(
 
         return mapOf(
             "success" to true
+        )
+    }
+
+    override fun finishImprovementResponse(improvementResponse: ImprovementResponse): Map<String, Any>? {
+        // Check improvementResponse validity and update it database
+        val improvementResponseStatus: ImprovementResponseStatusEnum = validityCheckService.getFinishedImprovementFinalStatus(improvementResponse.oldTranscriptionText, improvementResponse.newTranscriptionText)
+
+        improvementResponse.status = improvementResponseStatus
+
+        improvementResponseRepository.save(improvementResponse)
+
+        // Update improvementRequest in database
+        var improvementRequest = improvementResponse.improvementRequest
+
+        improvementRequest.improvedByCount = improvementRequest.improvedByCount+1
+        improvementRequest.timestampUpdated = Instant.now()
+        improvementRequest.newTranscriptionText = improvementResponse.newTranscriptionText
+
+        if (improvementRequest.improvedByCount == 3) {
+            improvementRequest.status = ImprovementRequestStatusEnum.FINISHED
+        }
+        else {
+            improvementRequest.status = ImprovementRequestStatusEnum.AWAITING_WORKER
+        }
+
+        improvementRequestRepository.save(improvementRequest);
+
+        // Update transcription in database
+        var transcription = improvementRequest.transcription
+
+        transcription.text = improvementResponse.newTranscriptionText
+        transcription.timestampUpdated = Instant.now()
+
+        transcriptionRepository.save(transcription);
+
+        return mapOf(
+            "success" to true,
         )
     }
 }

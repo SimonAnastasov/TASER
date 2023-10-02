@@ -7,7 +7,7 @@ import java.util.UUID
 @Entity
 @Table(name="taser_order")
 data class Order(
-        @ManyToOne val transcription: AudioTranscription,
+        @ManyToOne val improvementRequest: ImprovementRequest,
         @ManyToOne val user: User,
 
         val amountInDollars: Float,

@@ -9,7 +9,7 @@ import { INFO_CONTINUE_TO_ANALYSE_AUDIO } from '../../utils/infoTexts';
 import { serverApiUrl } from '../../utils/envVariables';
 import { getCookie, setCookie } from '../../utils/functions/cookies';
 import { useDispatch } from 'react-redux';
-import { setAnalysisImprovementInfo, setAnalysisResult, setAnalysisReview } from '../../redux/reducers/analysisResultSlice';
+import { setAnalysisEmployeeInfo, setAnalysisImprovementInfo, setAnalysisResult, setAnalysisReview } from '../../redux/reducers/analysisResultSlice';
 
 import { setAudioProcessingMessage, setAudioProcessingStatus } from '../../redux/reducers/audioProcessingSlice';
 
@@ -119,13 +119,15 @@ const AudioFileDropZone = () => {
 
                         dispatch(setAnalysisResult(data.transcription));
                         dispatch(setAnalysisReview(data.transcriptionReview));
+                        dispatch(setAnalysisEmployeeInfo({}));
 
                         if (data?.transcriptionImprovementInfo) {
                             dispatch(setAnalysisImprovementInfo({
                                 cost: ((new TextEncoder().encode(JSON.stringify(data.transcription.text)).length) * 0.0001).toFixed(2),
                                 isRequested: true,
                                 improvedBy: data?.transcriptionImprovementInfo?.improvedByCount,
-                                deadline: (new Date(new Date(data?.transcriptionImprovementInfo?.timestampCreated).setDate(new Date(data?.transcriptionImprovementInfo?.timestampCreated).getDate() + 7))).toLocaleString()
+                                deadline: (new Date(new Date(data?.transcriptionImprovementInfo?.timestampCreated).setDate(new Date(data?.transcriptionImprovementInfo?.timestampCreated).getDate() + 7))).toLocaleString(),
+                                status: data?.transcriptionImprovementInfo?.status
                             }))
                         }
 

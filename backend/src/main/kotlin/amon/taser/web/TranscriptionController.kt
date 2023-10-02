@@ -2,6 +2,7 @@ package amon.taser.web
 
 import amon.taser.model.ResponseDto
 import amon.taser.model.User
+import amon.taser.model.enums.ImprovementRequestStatusEnum
 import amon.taser.config.filters.JWTAuthorizationFilter
 import amon.taser.service.TranscriptionService
 import amon.taser.service.AudioTranscriptionReviewService
@@ -79,17 +80,25 @@ class TranscriptionController(
         val transcriptionHistory = transcriptionService.getTranscriptionsHistoryForUser(user)
 
         val isRequestedArray = Array(transcriptionHistory.size) { false }
+        val isImprovedArray = Array(transcriptionHistory.size) { false }
         for (i in transcriptionHistory.indices) {
             val transcription = transcriptionHistory[i]
             val improvementRequest = improvementRequestService.getImprovementRequestFromTranscription(transcription)
             if (improvementRequest != null) {
-                isRequestedArray[i] = true
+                if (improvementRequest.status != ImprovementRequestStatusEnum.FINISHED
+                        ||improvementRequest.status != ImprovementRequestStatusEnum.PAID) {
+                    isImprovedArray[i] = true
+                }
+                else {
+                    isRequestedArray[i] = true
+                }
             }
         }
 
         return ResponseEntity.ok(mapOf(
             "transcriptionHistory" to transcriptionHistory,
-            "isRequestedArray" to isRequestedArray
+            "isRequestedArray" to isRequestedArray,
+            "isImprovedArray" to isImprovedArray,
         ))
     }
 

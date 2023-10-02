@@ -108,7 +108,7 @@ const GetPaidPage = () => {
                             <div className="container px-6 lg:px-0 mx-auto mt-16 lg:mt-20">
                                 {getPaidHistory.map((improvement, index) => (
                                     <div key={index}
-                                         className={`${improvement.status !== 'IN_PROGRESS' ? 'opacity-20' : 'cursor-pointer'} px-8 py-5 lg:py-3 grid grid-cols-1 lg:grid-cols-9 w-full lg:justify-between gap-4 lg:gap-6 rounded-xl bg-primary/10 border-2 border-white transition-all duration-300 hover:bg-primary hover:text-white hover:shadow-md`}
+                                         className={`${improvement.status !== 'IN_PROGRESS' ? 'opacity-80 bg-gray-500/10' : 'cursor-pointer bg-primary/10'} px-8 py-5 lg:py-3 grid grid-cols-1 lg:grid-cols-9 w-full lg:justify-between gap-4 lg:gap-6 rounded-xl border-2 border-white transition-all duration-300 hover:bg-primary hover:text-white hover:shadow-md`}
                                          onClick={(e) => improvement.status === 'IN_PROGRESS' ? handleImproveTranscriptionClick(e, improvement.id) : null}
                                     >
                                         <div className="flex flex-col overflow-hidden lg:col-span-2">
