@@ -77,8 +77,19 @@ class TranscriptionController(
         }
 
         val transcriptionHistory = transcriptionService.getTranscriptionsHistoryForUser(user)
+
+        val isRequestedArray = Array(transcriptionHistory.size) { false }
+        for (i in transcriptionHistory.indices) {
+            val transcription = transcriptionHistory[i]
+            val improvementRequest = improvementRequestService.getImprovementRequestFromTranscription(transcription)
+            if (improvementRequest != null) {
+                isRequestedArray[i] = true
+            }
+        }
+
         return ResponseEntity.ok(mapOf(
-            "transcriptionHistory" to transcriptionHistory
+            "transcriptionHistory" to transcriptionHistory,
+            "isRequestedArray" to isRequestedArray
         ))
     }
 

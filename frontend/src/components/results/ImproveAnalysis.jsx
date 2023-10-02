@@ -135,7 +135,7 @@ const ImproveAnalysis = () => {
     }
 
     function handleEmployeeSyncChanges(e, id) {
-
+        
     }
 
     function handleEmployeeFinishImproving(e, id) {

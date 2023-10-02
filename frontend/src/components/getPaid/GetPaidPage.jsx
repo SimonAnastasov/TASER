@@ -116,8 +116,8 @@ const GetPaidPage = () => {
                                             <p className="!leading-5 heading--6 flex items-end gap-4">{improvement?.improvementRequest?.transcription?.filename} (by {improvement?.improvementRequest?.employer?.username}) <span className={`${improvement.status !== 'finished' ? 'hidden' : 'inline lg:hidden'}`}>→</span></p>
                                         </div>
                                         <div className="flex flex-col overflow-hidden lg:col-span-2">
-                                            <p className="!leading-5 --small-text">Improvement Completed:</p>
-                                            <p className="!leading-5 heading--6">{improvement.status === 'FINISHED' ? '✅' : '❌'}</p>
+                                            <p className="!leading-5 --small-text">Improvement Status:</p>
+                                            <p className="!leading-5 heading--6">{improvement.status}</p>
                                         </div>
                                         <div className="flex flex-col overflow-hidden lg:col-span-2">
                                             <p className="!leading-5 --small-text">Date Created:</p>
@@ -128,7 +128,7 @@ const GetPaidPage = () => {
                                             <p className="!leading-5 heading--6">{new Date(improvement.timestampUpdated).toLocaleString()}</p>
                                         </div>
                                         {improvement.status === 'IN_PROGRESS' && (
-                                            <div className="hidden lg:flex flex-col overflow-hidden justify-center items-end">
+                                            <div className="flex flex-col overflow-hidden justify-center lg:items-end">
                                                 <p className="!leading-5 heading--5">Improve →</p>
                                             </div>
                                         )}
@@ -144,6 +144,8 @@ const GetPaidPage = () => {
                             </div>
                         </>
                     )}
+
+                    <div className="py-10"></div>
                 </>
             )}
         </div>
