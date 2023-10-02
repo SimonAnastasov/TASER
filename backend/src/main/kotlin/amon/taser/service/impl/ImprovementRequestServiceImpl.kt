@@ -94,6 +94,29 @@ class ImprovementRequestServiceImpl(
     }
 
     override fun createImprovementResponseForEmployeeNot(employee: User): Map<String, Any>? {
+        val employeesImprovementResponses = improvementResponseRepository.findAllByEmployeeOrderByTimestampUpdatedDesc(employee)
+
+        if (!employeesImprovementResponses.isNullOrEmpty()) {
+            val lastImprovementResponse = employeesImprovementResponses[0]
+
+            if (lastImprovementResponse.status == ImprovementResponseStatusEnum.IN_PROGRESS) {
+                return mapOf(
+                    "error" to true,
+                    "message" to "You are currently improving an analysis. Please finish it before requesting another one."
+                )
+            }
+
+            val timeSinceLastImprovementResponse = Duration.between(lastImprovementResponse.timestampUpdated, Instant.now())
+
+            if (timeSinceLastImprovementResponse.toHours() < 24) {
+                val nextRequestTime = lastImprovementResponse.timestampUpdated.plus(Duration.ofHours(24))
+                return mapOf(
+                    "error" to true,
+                    "message" to "You have already requested an analysis for improving within the last 24 hours. Please try again after $nextRequestTime."
+                )
+            }
+        }
+
         val improvementRequests = improvementRequestRepository.findAllByEmployerNotAndStatus(employee, ImprovementRequestStatusEnum.AWAITING_WORKER)
 
         if (improvementRequests.isNullOrEmpty()) {
