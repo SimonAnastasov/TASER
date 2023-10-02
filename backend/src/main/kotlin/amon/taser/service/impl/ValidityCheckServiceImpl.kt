@@ -17,9 +17,9 @@ class ValidityCheckServiceImpl: ValidityCheckService {
         System.out.println("Length Difference--------------------")
         System.out.println(lengthDifference)
     
-        if (similarity >= 0.85 && lengthDifference <= 500) {
+        if (similarity >= 0.6 && lengthDifference <= 500) {
             return ImprovementResponseStatusEnum.FINISHED
-        } else if (similarity >= 0.5 && lengthDifference <= 500) {
+        } else if (similarity >= 0.3 && lengthDifference <= 500) {
             return ImprovementResponseStatusEnum.INADEQUATE
         } else {
             return ImprovementResponseStatusEnum.MALICIOUS

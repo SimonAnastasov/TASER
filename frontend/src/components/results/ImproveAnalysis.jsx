@@ -156,6 +156,9 @@ const ImproveAnalysis = () => {
         const newAnalysis = JSON.parse(analysis?.text);
         newAnalysis["Global_text"] = transcriptionTextGlobalInput.value;
 
+        console.log(JSON.parse(employeeInfo?.originalText)["Global_text"])
+        console.log(newAnalysis["Global_text"])
+
         axios.post(`${serverApiUrl}/improvements/syncImprovementResponse/${improvementResponseId}`, {
             newTranscriptionText: JSON.stringify(newAnalysis)
         }, {

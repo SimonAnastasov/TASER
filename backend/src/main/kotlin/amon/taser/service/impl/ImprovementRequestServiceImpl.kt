@@ -169,7 +169,7 @@ class ImprovementRequestServiceImpl(
 
     override fun finishImprovementResponse(improvementResponse: ImprovementResponse): Map<String, Any>? {
         // Check improvementResponse validity and update it database
-        val improvementResponseStatus: ImprovementResponseStatusEnum = validityCheckService.getFinishedImprovementFinalStatus(improvementResponse.oldTranscriptionText, improvementResponse.newTranscriptionText)
+        val improvementResponseStatus: ImprovementResponseStatusEnum = validityCheckService.getFinishedImprovementFinalStatus(improvementResponse.newTranscriptionText, improvementResponse.oldTranscriptionText)
 
         improvementResponse.status = improvementResponseStatus
 
