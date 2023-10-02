@@ -6,6 +6,7 @@ export const analysisResultSlice = createSlice({
         result: {},
         review: {},
         improvementInfo: {},
+        employeeInfo: {}
     },
     reducers: {
         setAnalysisResult: (state, action) => {
@@ -17,9 +18,12 @@ export const analysisResultSlice = createSlice({
         setAnalysisImprovementInfo: (state, action) => {
             state.improvementInfo = action.payload
         },
+        setAnalysisEmployeeInfo: (state, action) => {
+            state.employeeInfo = action.payload
+        }
     }
 })
 
-export const { setAnalysisResult, setAnalysisReview, setAnalysisImprovementInfo } = analysisResultSlice.actions;
+export const { setAnalysisResult, setAnalysisReview, setAnalysisImprovementInfo, setAnalysisEmployeeInfo } = analysisResultSlice.actions;
 
 export default analysisResultSlice.reducer;

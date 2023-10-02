@@ -76,6 +76,10 @@ class ImprovementRequestServiceImpl(
         return null;
     }
 
+    override fun getImprovementRequestFromTranscription(transcription: AudioTranscription): ImprovementRequest? {
+        return improvementRequestRepository.findByTranscription(transcription)
+    }
+
     override fun getImprovementRequestFromTranscriptionIdAndEmployer(transcriptionId: UUID, employer: User): ImprovementRequest? {
         val transcription = transcriptionRepository.findByIdAndUser(transcriptionId, employer).get()
         
@@ -119,7 +123,7 @@ class ImprovementRequestServiceImpl(
         val improvementResponse = ImprovementResponse(
             improvementRequest = improvementRequest,
             employee = employee,
-            oldTranscriptionText = improvementRequest.oldTranscriptionText,
+            oldTranscriptionText = improvementRequest.newTranscriptionText,
             newTranscriptionText = improvementRequest.newTranscriptionText,
             status = ImprovementResponseStatusEnum.IN_PROGRESS
         )

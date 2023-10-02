@@ -43,7 +43,14 @@ const HistoryPage = () => {
             .then(response => {
                 const data = response?.data;
                 if (!data?.error) {
-                    setHistory(data.transcriptionHistory);
+                    console.log(data);
+
+                    setHistory(data.transcriptionHistory.map((e, index) => {
+                        return {
+                            ...e,
+                            isRequested: data?.isRequestedArray?.[index]
+                        }
+                    }));
                     setIsLoading(false);
 
                     if (data.transcriptionHistory.length === 0) {
@@ -79,6 +86,8 @@ const HistoryPage = () => {
 
     return (
         <div className="px-6 lg:px-0">
+            <div className="bg-primary/10 bg-yellow-500/10 hidden"></div>
+
             <p className="heading--3 text-center">History - Your Past Analyses</p>
 
             <div className="mt-16">
@@ -93,8 +102,8 @@ const HistoryPage = () => {
                             <div className="flex flex-col gap-6 lg:px-6">
                                 {history.map((transcription, index) => (
                                     <div key={index}
-                                         className="px-8 py-5 lg:py-3 grid grid-cols-1 lg:grid-cols-9 w-full lg:justify-between gap-4 lg:gap-6 rounded-xl bg-primary/10 border-2 border-white cursor-pointer transition-all duration-300 hover:bg-primary hover:text-white hover:shadow-md"
-                                         onClick={(e) => handleTranscriptionClick(e, transcription.id)}     
+                                         className={`${transcription.isRequested ? 'bg-yellow-500/10' : 'bg-primary/10'} px-8 py-5 lg:py-3 grid grid-cols-1 lg:grid-cols-9 w-full lg:justify-between gap-4 lg:gap-6 rounded-xl border-2 border-white cursor-pointer transition-all duration-300 hover:bg-primary hover:text-white hover:shadow-md`}
+                                         onClick={(e) => handleTranscriptionClick(e, transcription.id)}
                                     >
                                         <div className="flex flex-col overflow-hidden lg:col-span-2">
                                             <p className="!leading-5 --small-text">Filename:</p>

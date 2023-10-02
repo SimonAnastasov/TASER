@@ -26,7 +26,7 @@ const GlobalAnalysisResults = () => {
             </div>
 
             {/* Show info boxes */}
-            <InfoBoxes entities_list={analysisResult.Global_entities_list} global_texts={global_texts}/>
+            <InfoBoxes entities_list={analysisResult.Global_entities_list} global_texts={global_texts} is_global_analysis={true}/>
         </>
     )
 }

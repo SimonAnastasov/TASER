@@ -29,7 +29,7 @@ export const INFO_RESULTS_PAGE = `
     (Global Analysis / Segment By Segment Analysis) <br/>
     by pressing the switch above.<br/><br/>
 
-    <hr/> <br/>
+    <hr/><br/>
 
     All of the information boxes below are scrollable when the output is large.
 `
@@ -40,7 +40,7 @@ export const INFO_IMPROVE_THIS_ANALYSIS = `
 
     We'll find the people automatically for you, so you don't have to worry about that. <br/><br/>
 
-    <hr/> <br/>
+    <hr/><br/>
 
     This particular analysis will cost you approximately $[[[PRICE]]] to improve.
 `
@@ -50,15 +50,23 @@ export const INFO_ANALYSIS_IS_BEING_IMPROVED = `
 
     So far, improvements have been made by [[[IMPROVED_BY]]]/3 people. <br/><br/>
 
-    It will be finished no later than [[[DEADLINE]]]. <br/><br/>
-
-    <hr/> <br/>
-
-    You can finish improving it now by pressing the red button. (Note: there will be no refund nor partial refund for doing this) <br/><br/>
+    It will be finished no later than [[[DEADLINE]]].
 `
 
 export const INFO_GET_PAID_PAGE = `
     You can get paid by improving others' analyses. <br/><br/>
 
     You can request to improve one new analysis per day. It will be chosen for you at random.
+`
+
+export const INFO_YOU_ARE_CURRENTLY_IMPROVING_THIS_ANALYSIS = `
+    You are currently improving this analysis. Regularly click 'Sync Changes' to save your edits in the database. <br/><br/>
+
+    <hr/><br/>
+
+    If you want to revert the analysis back to the original, click 'Revert To Original'. This will revert all previous changes you've made, even those from previous days. <br/><br/>
+
+    <hr/><br/>
+
+    When you are completely finished with improving this analysis, click 'Finish Improving'
 `
