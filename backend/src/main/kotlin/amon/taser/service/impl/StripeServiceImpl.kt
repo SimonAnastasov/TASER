@@ -68,13 +68,13 @@ class StripeServiceImpl (
 
     override fun getPaymentIntentClientSecret(transcriptionId: UUID): String {
         Stripe.apiKey = apiKey
-        
+
         val transcription = transcriptionService.getTranscriptionResult(transcriptionId)
 
         val createParams = PaymentIntentCreateParams.Builder()
             .setCurrency("usd")
             // .putMetadata("featureRequest", createPayment.getFeatureRequest())
-            .setAmount(transcription?.text?.length?.times(0.01)?.toLong())
+            .setAmount(transcription?.text?.length?.times(0.0001)?.toLong())
             .build()
 
         val intent = PaymentIntent.create(createParams)

@@ -4,6 +4,8 @@ import jakarta.persistence.*
 import java.time.Instant
 import java.util.UUID
 
+import amon.taser.model.enums.OrderStatusEnum
+
 @Entity
 @Table(name="taser_order")
 data class Order(
@@ -11,7 +13,7 @@ data class Order(
         @ManyToOne val user: User,
 
         val amountInDollars: Float,
-        var status: String,
+        var status: OrderStatusEnum,
 
         @Id @GeneratedValue(strategy = GenerationType.UUID) val id: UUID? = null,
         

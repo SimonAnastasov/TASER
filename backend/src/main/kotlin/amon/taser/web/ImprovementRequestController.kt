@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
@@ -41,9 +42,9 @@ class ImprovementRequestController(
     @PostMapping("/api/improvements/requestImprovement/{transcriptionId}")
     fun requestImprovement(
         @PathVariable transcriptionId: UUID,
+        @RequestBody body: Map<String, Any>,
         @RequestHeader("Authorization", required = false) authorizationHeader: String?
     ): ResponseEntity<Any> {
-
         val user: User? = filter.getUserFromAuthorizationHeader(authorizationHeader)
 
         if (user == null) {
@@ -53,7 +54,9 @@ class ImprovementRequestController(
             ))
         }
 
-        val improvementRequestApproval = improvementRequestService.requestImprovement(user, transcriptionId)
+        val paymentIntent: Map<String, Any> = body?.get("paymentIntent") as Map<String, Any>
+
+        val improvementRequestApproval: Map<String, Any> = improvementRequestService.requestImprovement(user, transcriptionId, paymentIntent) as Map<String, Any>
 
         return if (improvementRequestApproval != null && improvementRequestApproval?.get("isApproved") as? Boolean == true) { 
             ResponseEntity.ok(mapOf(

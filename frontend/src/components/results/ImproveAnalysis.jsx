@@ -57,13 +57,9 @@ const ImproveAnalysis = () => {
                                     {!improvementInfo?.isRequested ? (
                                         <>
                                             <div>
-                                                <button className="--button button--success" onClick={(e) => handleImproveRequest(e, analysis.id)}>Improve Your Analysis</button>
-                                                <InfoButton infoText={INFO_IMPROVE_THIS_ANALYSIS.replace(/\[\[\[PRICE\]\]\]/g, improvementInfo?.cost ?? '-')}/>
-                                            </div>
-                                            <div>
                                                 {account?.paymentIntentClientSecret && (
-                                                    <Elements stripe={stripePromise} options={account?.paymentIntentClientSecret}>
-                                                        <StripePaymentElement/>
+                                                    <Elements stripe={stripePromise} options={{clientSecret: account?.paymentIntentClientSecret}}>
+                                                        <StripePaymentElement setIsLoading={setIsLoading}/>
                                                     </Elements>
                                                 )}
                                             </div>
@@ -106,52 +102,6 @@ const ImproveAnalysis = () => {
         </>
     )
 
-    function handleImproveRequest(e, transcriptionId) {
-        setIsLoading(true);
-
-        let headers = {}
-            
-        let bearerToken = getCookie("bearerToken");
-        if (typeof bearerToken === "string" && bearerToken.length > 0) {
-            headers["Authorization"] = `${bearerToken}`;
-        }
-
-        axios.post(`${serverApiUrl}/improvements/requestImprovement/${transcriptionId}`, {}, {
-            headers: headers
-        })
-            .then(response => {
-                setIsLoading(false);
-
-                const data = response?.data;
-
-                if (!data?.error) {
-                    dispatch(setAnalysisImprovementInfo({
-                        isRequested: true,
-                        improvedBy: data?.improvementRequest?.improvedByCount,
-                        deadline: (new Date(new Date(data?.improvementRequest?.timestampCreated).setDate(new Date(data?.improvementRequest?.timestampCreated).getDate() + 7))).toLocaleString()
-                    }));
-                }
-                else {
-                    if (data.notLoggedIn) {
-                        if (account.loggedIn) {
-                            dispatch(setLoggedIn(false));
-                            dispatch(setAccount({ username: "" }));
-
-                            dispatch(setTextError("Please log in to request analysis improvement."));                             
-                        }
-                    }
-                    else {
-                        dispatch(setTextError(data.message));
-                    }
-                }
-            })
-            .catch(error => {
-                setIsLoading(false);
-
-                dispatch(setTextError("Unknown error. Please try again later."));
-            });
-    }
-
     function handleEmployeeSyncChanges(e, improvementResponseId) {
         let transcriptionTextGlobalInput = document.getElementById("transcriptionTextGlobal");
 
@@ -171,9 +121,6 @@ const ImproveAnalysis = () => {
 
         const newAnalysis = JSON.parse(analysis?.text);
         newAnalysis["Global_text"] = transcriptionTextGlobalInput.value;
-
-        console.log(JSON.parse(employeeInfo?.originalText)["Global_text"])
-        console.log(newAnalysis["Global_text"])
 
         axios.post(`${serverApiUrl}/improvements/syncImprovementResponse/${improvementResponseId}`, {
             newTranscriptionText: JSON.stringify(newAnalysis)

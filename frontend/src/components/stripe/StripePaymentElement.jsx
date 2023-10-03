@@ -11,14 +11,21 @@ import { setTextError } from '../../redux/reducers/errorsSlice';
 import { setTextSuccess } from '../../redux/reducers/successesSlice';
 import { setAccount, setLoggedIn } from '../../redux/reducers/accountSlice';
 import { getCookie } from '../../utils/functions/cookies';
+import InfoButton from '../utils/InfoButton';
+import { INFO_IMPROVE_THIS_ANALYSIS } from '../../utils/infoTexts';
+import { setAnalysisImprovementInfo } from '../../redux/reducers/analysisResultSlice';
 
-export const StripePaymentElement = ({ }) => {
+export const StripePaymentElement = ({ setIsLoading }) => {
     const stripe = useStripe();
     const elements = useElements();
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const account = useSelector(state => state.account);
+
+    const analysis = useSelector(state => state?.analysisResult?.result);
+    const improvementInfo = useSelector(state => state?.analysisResult?.improvementInfo);
+    const employeeInfo = useSelector(state => state?.analysisResult?.employeeInfo);
 
     const [isProcessing, setIsProcessing] = useState(false);
 
@@ -54,56 +61,67 @@ export const StripePaymentElement = ({ }) => {
             // methods like iDEAL, your customer will be redirected to an intermediate
             // site first to authorize the payment, then redirected to the `return_url`.
 
-            let headers = {};
-
-            let bearerToken = getCookie("bearerToken");
-            if (typeof bearerToken === "string" && bearerToken.length > 0) {
-                headers["Authorization"] = `Bearer ${bearerToken}`;
-            }
-
-            const error500Message = "Unknown error. This is not an error on your part. Please check back later.";
-            axios.post(`${serverApiUrl}/ApiOrder/DoOrder`, {}, {headers})
-                .then(response => {
-                    const data = response?.data;
-
-                    if (data.isError) {
-                        if (data.notLoggedIn) {
-                            if (account.loggedIn) {
-                                dispatch(setLoggedIn(false));
-                                dispatch(setAccount({ email: "" }));
-                            }
-                            
-                            dispatch(setTextError("You are not logged in. Please log in to purchase."));
-    
-                            return ;
-                        }
-                    } else {
-                        dispatch(setTextSuccess("You've successfully made an order."));
-                        navigate("/my-orders");
-
-                        return ;
-                    }
-
-                    // Else:
-                    let message = data.message;
-                    if (!message) message = error500Message;
-
-                    dispatch(setTextError(message));
-                })
-                .catch(error => {
-                    dispatch(setTextError(error500Message));
-                })
+            handleImproveRequest(null, analysis?.id, result);
         }
     };
 
     return (
-        <div className={`fixed inset-0 bg-red-700/20 rounded-xl flex flex-col justify-center items-center transition-all duration-300 ${true ? 'scale-100' : 'scale-0'}`}>
-            <div className={`px-4 lg:px-8 py-4 lg:py-8 max-w-5xl mx-auto w-full bg-white rounded-xl flex flex-col justify-center items-center transition-all duration-300 delay-150 overflow-y-auto ${true ? 'scale-100' : 'scale-0'}`}>
-                <form onSubmit={handleSubmit}>
-                    <PaymentElement />
-                    <button className="mx-auto mt-4 --button button--primary-inverted" disabled={!stripe || isProcessing}>Pay ${3} →</button>
-                </form>
-            </div>
+        <div>
+            <form onSubmit={handleSubmit}>
+                <PaymentElement />
+                <div className="mt-4 flex gap-4 items-center">
+                    <button className="mx-auto --button button--success" disabled={!stripe || isProcessing}>Improve Your Analysis (${improvementInfo?.cost})</button>
+                    <InfoButton infoText={INFO_IMPROVE_THIS_ANALYSIS.replace(/\[\[\[PRICE\]\]\]/g, improvementInfo?.cost ?? '-')}/>
+                </div>
+            </form>
         </div>
     )
+
+    function handleImproveRequest(e, transcriptionId, result) {
+        setIsLoading(true);
+
+        let headers = {}
+            
+        let bearerToken = getCookie("bearerToken");
+        if (typeof bearerToken === "string" && bearerToken.length > 0) {
+            headers["Authorization"] = `${bearerToken}`;
+        }
+
+        axios.post(`${serverApiUrl}/improvements/requestImprovement/${transcriptionId}`, {
+            paymentIntent: result
+        }, {
+            headers: headers
+        })
+            .then(response => {
+                setIsLoading(false);
+
+                const data = response?.data;
+
+                if (!data?.error) {
+                    dispatch(setAnalysisImprovementInfo({
+                        isRequested: true,
+                        improvedBy: data?.improvementRequest?.improvedByCount,
+                        deadline: (new Date(new Date(data?.improvementRequest?.timestampCreated).setDate(new Date(data?.improvementRequest?.timestampCreated).getDate() + 7))).toLocaleString()
+                    }));
+                }
+                else {
+                    if (data.notLoggedIn) {
+                        if (account.loggedIn) {
+                            dispatch(setLoggedIn(false));
+                            dispatch(setAccount({ username: "" }));
+
+                            dispatch(setTextError("Please log in to request analysis improvement."));                             
+                        }
+                    }
+                    else {
+                        dispatch(setTextError(data.message));
+                    }
+                }
+            })
+            .catch(error => {
+                setIsLoading(false);
+
+                dispatch(setTextError("Unknown error. Please try again later."));
+            });
+    }
 }

@@ -154,6 +154,8 @@ const HistoryPage = () => {
             headers["Authorization"] = `${bearerToken}`;
         }
 
+        console.log("Hi");
+
         axios.get(`${serverApiUrl}/transcription/${transcriptionId}`, {
             headers: headers
         })

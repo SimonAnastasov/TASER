@@ -33,7 +33,7 @@ class ImprovementRequestServiceImpl(
         return improvementRequestRepository.findById(id).get()
     }
 
-    override fun requestImprovement(employer: User, transcriptionId: UUID): Map<String, Any>? {
+    override fun requestImprovement(employer: User, transcriptionId: UUID, paymentIntent: Map<String, Any>): Map<String, Any> {
         // Confirm that transcription with that id exists and it belongs to employer
         val transcription = transcriptionRepository.findByIdAndUser(transcriptionId, employer).get()
 
@@ -55,23 +55,12 @@ class ImprovementRequestServiceImpl(
         }
         
         // Process order
-        val orderApproval = orderService.processImprovementRequest(employer, transcription)
+        val orderApproval = orderService.processImprovementRequest(employer, transcription, paymentIntent)
 
         if (orderApproval != null && orderApproval?.get("isApproved") as? Boolean == true) {
-            // Create improvement request
-            val improvementRequest = ImprovementRequest(
-                transcription = transcription,
-                employer = employer,
-                oldTranscriptionText = transcription.text,
-                newTranscriptionText = transcription.text,
-                status = ImprovementRequestStatusEnum.AWAITING_WORKER
-            )
-
-            improvementRequestRepository.save(improvementRequest)
-
-            return mapOf(
+            return mapOf<String, Any>(
                 "isApproved" to true,
-                "improvementRequest" to improvementRequest
+                "improvementRequest" to (orderApproval.get("improvementRequest") as? Any ?: "Improvement request not found in order approval.")
             )
         }
         else {
@@ -80,8 +69,6 @@ class ImprovementRequestServiceImpl(
                 "message" to (orderApproval?.get("message") ?: "Order denied.")
             )
         }
-
-        return null;
     }
 
     override fun getImprovementRequestFromTranscription(transcription: AudioTranscription): ImprovementRequest? {
