@@ -47,4 +47,8 @@ class OrderServiceImpl(
             "improvementRequest" to improvementRequest
         )
     }
+
+    override fun getOrderByRequest(request: ImprovementRequest): Order? {
+        return orderRepository.getOrderByImprovementRequest(request)
+    }
 }

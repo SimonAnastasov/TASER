@@ -73,7 +73,8 @@ class StripeServiceImpl (
 
         val createParams = PaymentIntentCreateParams.builder()
             .setCurrency("usd")
-            .setAmount(transcription?.text?.length?.times(0.01)?.toLong())
+//            .setAmount(transcription?.text?.length?.times(0.01)?.toLong())
+            .setAmount(400) // TODO: Remove this hard-coded value
             .build()
 
         val intent = PaymentIntent.create(createParams)
