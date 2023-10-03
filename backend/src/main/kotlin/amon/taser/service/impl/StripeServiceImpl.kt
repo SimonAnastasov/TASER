@@ -71,10 +71,9 @@ class StripeServiceImpl (
 
         val transcription = transcriptionService.getTranscriptionResult(transcriptionId)
 
-        val createParams = PaymentIntentCreateParams.Builder()
+        val createParams = PaymentIntentCreateParams.builder()
             .setCurrency("usd")
-            // .putMetadata("featureRequest", createPayment.getFeatureRequest())
-            .setAmount(transcription?.text?.length?.times(0.0001)?.toLong())
+            .setAmount(transcription?.text?.length?.times(0.01)?.toLong())
             .build()
 
         val intent = PaymentIntent.create(createParams)

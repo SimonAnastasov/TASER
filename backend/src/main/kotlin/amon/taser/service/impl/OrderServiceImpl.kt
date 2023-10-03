@@ -36,7 +36,7 @@ class OrderServiceImpl(
         val order = Order(
             improvementRequest = improvementRequest,
             user = employer,
-            amountInDollars = 4.17.toDouble().toFloat(),
+            amountInDollars = 4.07.toDouble().toFloat(),
             status = OrderStatusEnum.FULFILLED
         )
 

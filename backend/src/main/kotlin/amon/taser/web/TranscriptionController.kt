@@ -117,7 +117,7 @@ class TranscriptionController(
 
         val transcriptionImprovementRequest = improvementRequestService.getImprovementRequestFromTranscriptionIdAndEmployer(id, user)
 
-        val paymentIntentClientSecret = transcription?.id?.let { stripeService.getPaymentIntentClientSecret(it) }
+        val paymentIntentClientSecret = stripeService.getPaymentIntentClientSecret(id)
 
         return if (transcription != null) {
             ResponseEntity.ok(mapOf(
