@@ -26,6 +26,7 @@ class TranscriptionController(
         val audioTranscriptionReviewService: AudioTranscriptionReviewService,
         val improvementRequestService: ImprovementRequestService,
         val userService: UserService,
+        val stripeService: StripeService,
         val storageService: StorageService,
         val filter: JWTAuthorizationFilter
 ){
@@ -116,11 +117,14 @@ class TranscriptionController(
 
         val transcriptionImprovementRequest = improvementRequestService.getImprovementRequestFromTranscriptionIdAndEmployer(id, user)
 
+        val paymentIntentClientSecret = transcription?.id?.let { stripeService.getPaymentIntentClientSecret(it) }
+
         return if (transcription != null) {
             ResponseEntity.ok(mapOf(
                 "transcription" to transcription,
                 "transcriptionReview" to transcriptionReview,
-                "transcriptionImprovementInfo" to transcriptionImprovementRequest
+                "transcriptionImprovementInfo" to transcriptionImprovementRequest,
+                "paymentIntentClientSecret" to paymentIntentClientSecret
             ))
         } else {
             ResponseEntity.ok(mapOf(

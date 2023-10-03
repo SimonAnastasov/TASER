@@ -70,3 +70,13 @@ export const INFO_YOU_ARE_CURRENTLY_IMPROVING_THIS_ANALYSIS = `
 
     When you are completely finished with improving this analysis, click 'Finish Improving'
 `
+
+export const INFO_ADD_PAYMENT_INFORMATION = `
+    You need to add your payment information before you can get paid. <br/><br/>
+
+    You can do this by pressing the 'Add Payment Information' button. <br/><br/>
+
+    You will be redirected to Stripe's website to add your payment information. <br/><br/>
+
+    Once you've added your payment information, you will be redirected back to this page.
+`

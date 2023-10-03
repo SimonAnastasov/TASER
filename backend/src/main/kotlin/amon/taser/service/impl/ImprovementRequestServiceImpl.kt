@@ -29,6 +29,10 @@ class ImprovementRequestServiceImpl(
         val transcriptionRepository: TranscriptionRepository,
 ): ImprovementRequestService {
 
+    override fun getImprovementRequestFromId(id: UUID): ImprovementRequest? {
+        return improvementRequestRepository.findById(id).get()
+    }
+
     override fun requestImprovement(employer: User, transcriptionId: UUID): Map<String, Any>? {
         // Confirm that transcription with that id exists and it belongs to employer
         val transcription = transcriptionRepository.findByIdAndUser(transcriptionId, employer).get()

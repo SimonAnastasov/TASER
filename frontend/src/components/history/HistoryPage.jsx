@@ -6,7 +6,7 @@ import axios from 'axios'
 import { serverApiUrl } from '../../utils/envVariables'
 
 import { getCookie } from '../../utils/functions/cookies';
-import { setAccount, setLoggedIn } from '../../redux/reducers/accountSlice';
+import { setAccount, setLoggedIn, setPaymentIntentClientSecret } from '../../redux/reducers/accountSlice';
 import { setAnalysisEmployeeInfo, setAnalysisImprovementInfo, setAnalysisResult, setAnalysisReview } from '../../redux/reducers/analysisResultSlice';
 
 const HistoryPage = () => {
@@ -159,10 +159,15 @@ const HistoryPage = () => {
         })
             .then(response => {
                 const data = response?.data;
+
+                console.log(data);
+
                 if (!data?.error) {
                     dispatch(setAnalysisResult(data.transcription));
                     dispatch(setAnalysisReview(data.transcriptionReview));
                     dispatch(setAnalysisEmployeeInfo({}));
+
+                    dispatch(setPaymentIntentClientSecret(data.paymentIntentClientSecret));
 
                     if (data?.transcriptionImprovementInfo) {
                         dispatch(setAnalysisImprovementInfo({
@@ -174,7 +179,9 @@ const HistoryPage = () => {
                         }))
                     }
                     else {
-                        dispatch(setAnalysisImprovementInfo({}))
+                        dispatch(setAnalysisImprovementInfo({
+                            cost: ((new TextEncoder().encode(JSON.stringify(data.transcription.text)).length) * 0.0001).toFixed(2),
+                        }))
                     }
                     
                     navigate("/analysis");

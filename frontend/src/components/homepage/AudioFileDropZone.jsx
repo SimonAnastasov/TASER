@@ -130,6 +130,11 @@ const AudioFileDropZone = () => {
                                 status: data?.transcriptionImprovementInfo?.status
                             }))
                         }
+                        else {
+                            dispatch(setAnalysisImprovementInfo({
+                                cost: ((new TextEncoder().encode(JSON.stringify(data.transcription.text)).length) * 0.0001).toFixed(2),
+                            }))
+                        }
 
                         navigate("/analysis");
                     }

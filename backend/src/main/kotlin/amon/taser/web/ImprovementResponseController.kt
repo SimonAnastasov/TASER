@@ -9,6 +9,7 @@ import amon.taser.service.ImprovementResponseService
 import amon.taser.repository.ImprovementResponseRepository
 import amon.taser.service.AudioTranscriptionReviewService
 import amon.taser.service.UserService
+import amon.taser.service.StripeService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -33,6 +34,7 @@ class ImprovementResponseController(
         val improvementResponseService: ImprovementResponseService,
         val improvementResponseRepository: ImprovementResponseRepository,
         val userService: UserService,
+        val stripeService: StripeService,
         filter: JWTAuthorizationFilter
 ){
 
@@ -40,6 +42,46 @@ class ImprovementResponseController(
 
     init {
         this.filter = filter
+    }
+
+    @GetMapping("/api/improvements/addPaymentInfo")
+    fun addPaymentInfo(
+        @RequestHeader("Authorization", required = false) authorizationHeader: String?
+    ): ResponseEntity<Any> {
+        val user: User? = filter.getUserFromAuthorizationHeader(authorizationHeader)
+
+        if (user == null) {
+            return ResponseEntity.ok(mapOf(
+                "error" to true,
+                "notLoggedIn" to true
+            ))
+        }
+
+        if (user.connectedAccountId != null) {
+            return ResponseEntity.ok(mapOf(
+                "error" to true,
+                "message" to "You already have a payment account."
+            ))
+        }
+
+        val stripeConnectedAccountId = stripeService.createConnectAccountForUser(user)
+
+        if (stripeConnectedAccountId == null) {
+            return ResponseEntity.ok(mapOf(
+                "error" to true,
+                "message" to "Could not create a payment account for you at this time. Please try again later."
+            ))
+        }
+
+        userService.saveUser(user.copy(
+            connectedAccountId = stripeConnectedAccountId
+        ))
+
+        val stripeConnectedLink = stripeService.createConnectedLinkForUser(stripeConnectedAccountId, "http://localhost:3000/get-paid")
+
+        return ResponseEntity.ok(mapOf(
+            "stripeConnectedLink" to stripeConnectedLink
+        ))
     }
 
     @GetMapping("/api/improvements/getPaidHistory")
@@ -60,6 +102,7 @@ class ImprovementResponseController(
 
         return if (improvementResponsesHistory != null) { 
             ResponseEntity.ok(mapOf(
+                "stripeConnectedAccountId" to user.connectedAccountId,
                 "improvementsHistory" to improvementResponsesHistory
             ))
         } else {

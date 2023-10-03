@@ -5,6 +5,8 @@ export const accountSlice = createSlice({
     initialState: {
         account: {username: ""},
         loggedIn: false,
+        stripeConnectedAccountId: null,
+        paymentIntentClientSecret: null,
         messageRegisterPage: {message: "", isError: false},
         messageLoginPage: {message: "", isError: false},
     },
@@ -15,6 +17,12 @@ export const accountSlice = createSlice({
         setLoggedIn: (state, action) => {
             state.loggedIn = action.payload
         },
+        setStripeConnectedAccountId: (state, action) => {
+            state.stripeConnectedAccountId = action.payload
+        },
+        setPaymentIntentClientSecret: (state, action) => {
+            state.paymentIntentClientSecret = action.payload
+        },
         setMessageRegisterPage: (state, action) => {
             state.messageRegisterPage = action.payload
         },
@@ -24,6 +32,6 @@ export const accountSlice = createSlice({
     }
 })
 
-export const { setAccount, setLoggedIn, setMessageRegisterPage, setMessageLoginPage } = accountSlice.actions;
+export const { setAccount, setLoggedIn, setStripeConnectedAccountId, setPaymentIntentClientSecret, setMessageRegisterPage, setMessageLoginPage } = accountSlice.actions;
 
 export default accountSlice.reducer;

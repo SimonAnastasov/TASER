@@ -8,10 +8,17 @@ import InfoButton from '../utils/InfoButton';
 import { INFO_ANALYSIS_IS_BEING_IMPROVED, INFO_IMPROVE_THIS_ANALYSIS, INFO_YOU_ARE_CURRENTLY_IMPROVING_THIS_ANALYSIS } from '../../utils/infoTexts';
 import { setAccount, setLoggedIn } from '../../redux/reducers/accountSlice';
 import { setAnalysisImprovementInfo } from '../../redux/reducers/analysisResultSlice';
-import { serverApiUrl } from '../../utils/envVariables';
+import { serverApiUrl, stripePublishableKey } from '../../utils/envVariables';
 import { getCookie } from '../../utils/functions/cookies';
 import { setTextError } from '../../redux/reducers/errorsSlice';
 import { setTextSuccess } from '../../redux/reducers/successesSlice';
+
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+
+import { StripePaymentElement } from '../stripe/StripePaymentElement';
+
+const stripePromise = loadStripe(`${stripePublishableKey}`);
 
 const ImproveAnalysis = () => {
     const dispatch = useDispatch();
@@ -49,8 +56,17 @@ const ImproveAnalysis = () => {
                                 <>
                                     {!improvementInfo?.isRequested ? (
                                         <>
-                                            <button className="--button button--success" onClick={(e) => handleImproveRequest(e, analysis.id)}>Improve Your Analysis</button>
-                                            <InfoButton infoText={INFO_IMPROVE_THIS_ANALYSIS.replace(/\[\[\[PRICE\]\]\]/g, improvementInfo?.cost ?? '-')}/>
+                                            <div>
+                                                <button className="--button button--success" onClick={(e) => handleImproveRequest(e, analysis.id)}>Improve Your Analysis</button>
+                                                <InfoButton infoText={INFO_IMPROVE_THIS_ANALYSIS.replace(/\[\[\[PRICE\]\]\]/g, improvementInfo?.cost ?? '-')}/>
+                                            </div>
+                                            <div>
+                                                {account?.paymentIntentClientSecret && (
+                                                    <Elements stripe={stripePromise} options={account?.paymentIntentClientSecret}>
+                                                        <StripePaymentElement/>
+                                                    </Elements>
+                                                )}
+                                            </div>
                                         </>
                                     ) : improvementInfo?.status === "FINISHED" || improvementInfo?.status === "PAID" ? (
                                         <div className="text-center">

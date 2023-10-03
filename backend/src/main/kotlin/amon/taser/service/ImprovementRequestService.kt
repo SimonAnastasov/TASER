@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile
 import java.util.UUID
 
 interface ImprovementRequestService {
+    fun getImprovementRequestFromId(id: UUID): ImprovementRequest?
     fun requestImprovement(employer: User, transcriptionId: UUID): Map<String, Any>?
     fun getImprovementRequestFromTranscription(transcription: AudioTranscription): ImprovementRequest?
     fun getImprovementRequestFromTranscriptionIdAndEmployer(transcriptionId: UUID, employer: User): ImprovementRequest?

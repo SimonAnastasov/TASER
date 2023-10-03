@@ -38,6 +38,10 @@ class UserServiceImpl(
         }
     }
 
+    override fun saveUser(user: User): User? {
+        return userRepository.save(user)
+    }
+
     override fun checkUsernameAlreadyExists(username: String): Boolean {
         return userRepository.findByUsername(username) != null
     }

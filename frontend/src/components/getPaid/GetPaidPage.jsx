@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import InfoButton from '../utils/InfoButton'
-import { INFO_GET_PAID_PAGE } from '../../utils/infoTexts'
+import { INFO_ADD_PAYMENT_INFORMATION, INFO_GET_PAID_PAGE } from '../../utils/infoTexts'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { setAccount, setLoggedIn } from '../../redux/reducers/accountSlice';
+import { setAccount, setLoggedIn, setStripeConnectedAccountId } from '../../redux/reducers/accountSlice';
 import { getCookie } from '../../utils/functions/cookies';
 
 import axios from 'axios';
@@ -51,6 +51,8 @@ const GetPaidPage = () => {
                 if (!data?.error) {
                     setGetPaidHistory(data.improvementsHistory);
 
+                    dispatch(setStripeConnectedAccountId(data.stripeConnectedAccountId));
+
                     if (data.improvementsHistory.length === 0) {
                         setNoGetPaidHistoryMessage({isError: false, message: "You have no history or active analyses for improving."});
                     }
@@ -92,13 +94,19 @@ const GetPaidPage = () => {
             ) : (
                 <>
                     {account?.loggedIn && (
-                        <div className="mb-16 lg:mb-20 w-fit mx-auto flex items-center gap-4">
-                            <div className="hidden">
-                                <InfoButton infoText={INFO_GET_PAID_PAGE}/>
-                            </div>
-                            <button className="--button button--success" onClick={handleRequestAnalysisForImprovingClick}>Request Analysis For Improving</button>
-                            <InfoButton infoText={INFO_GET_PAID_PAGE}/>
-                        </div>
+                        <>
+                            {account?.stripeConnectedAccountId ? (
+                                <div className="mb-16 lg:mb-20 w-fit mx-auto flex items-center gap-4">
+                                    <button className="--button button--success" onClick={handleRequestAnalysisForImprovingClick}>Request Analysis For Improving</button>
+                                    <InfoButton infoText={INFO_GET_PAID_PAGE}/>
+                                </div>
+                            ) : (
+                                <div className="mb-16 lg:mb-20 w-fit mx-auto flex items-center gap-4">
+                                    <button className="--button button--success" onClick={handleAddPaymentInformation}>Add Payment Information</button>
+                                    <InfoButton infoText={INFO_ADD_PAYMENT_INFORMATION}/>
+                                </div>
+                            )}
+                        </>
                     )}
                     
                     {getPaidHistory.length > 0 ? (
@@ -153,6 +161,47 @@ const GetPaidPage = () => {
 
     function handleGoBackHome(e) {
         navigate("/");
+    }
+
+    function handleAddPaymentInformation(e) {
+        setIsLoading(true);
+
+        let headers = {}
+            
+        let bearerToken = getCookie("bearerToken");
+        if (typeof bearerToken === "string" && bearerToken.length > 0) {
+            headers["Authorization"] = `${bearerToken}`;
+        }
+
+        axios.get(`${serverApiUrl}/improvements/addPaymentInfo`, {
+            headers: headers
+        })
+            .then(response => {
+                setIsLoading(false);
+
+                const data = response?.data;
+
+                if (!data?.error) {
+                    window.location.href = data.stripeConnectedLink;
+                }
+                else {
+                    if (data.notLoggedIn) {
+                        if (account.loggedIn) {
+                            dispatch(setLoggedIn(false));
+                            dispatch(setAccount({ username: "" }));
+
+                            dispatch(setTextError("You are not logged in. Please log in to request analysis for improving."));
+                        }
+                    }
+                    else {
+                        dispatch(setTextError(data.message));
+                    }
+                }
+            })
+            .catch(error => {
+                setIsLoading(false);
+                dispatch(setTextError("Unknown error. Please try again later."));
+            })
     }
 
     function handleRequestAnalysisForImprovingClick(e) {
